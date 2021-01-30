@@ -166,10 +166,12 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 								}catch(Exception e) {
 									e.printStackTrace();
 									System.out.println("Block4 failed");
+									return false;
 								}
 							}catch(Exception e) {
 								e.printStackTrace();
 								System.out.println("Block3 failed");
+								return false;
 							}
 						}else {
 							System.out.println("OVERLAP");
@@ -181,10 +183,12 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println("Block2 failed");
+				return false;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Block1 failed");
+			return false;
 		}
 		return false;
 	}

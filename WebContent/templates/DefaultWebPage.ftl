@@ -3,7 +3,6 @@
 <b>Welcome to our Calendar Webapplication</b><br><br>
 
 <form id="selectIdentity" method="POST" name="identity" action="selectGCWebpage?action=showCalendar">
-	<legend>Required Information</legend>
 	
 	<label>Assumed Groupmembership: </label>
 	<select id="identity" name="identity" form="selectIdentity">
@@ -24,7 +23,7 @@
 		<option value="3">Group3</option>
 	</select>
 	<fieldset id="createAppointment">
-		<legend>Required Information</legend>
+		
 		<div>
 			<label>Name: </label>
 			<input type="text" name="name" id="name">

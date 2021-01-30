@@ -27,4 +27,7 @@
 	</tr>
 	</#list>
 </table>
+<form action="/VR/index" method="GET">
+	<button type="submit" id="" name="" value="Submit">Back to Main Page</button>
+</form>
 <#include "footer.ftl">

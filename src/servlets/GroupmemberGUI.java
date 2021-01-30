@@ -68,64 +68,56 @@ public class GroupmemberGUI extends HttpServlet{
 						+endTime_time + deadline_inp);
 				
 				//Prepare data for constructors - Daten für Konstruktoren anpassen
-				int postcode = Integer.valueOf(postcode_inp);
-				String[] date_start = startTime_date.split(":");
-				String[] time_start = startTime_time.split(":");
-				String[] date_end = endTime_date.split(":");
-				String[] time_end = endTime_time.split(":");
-				String[] deadLine = deadline_inp.split(":");
-				
-				for(String e : date_start) {
-					System.out.println("date_start: " + e);
-				}
-				for(String e : time_start) {
-					System.out.println("time_start: " + e);
-				}
-				for(String e : date_end) {
-					System.out.println("date_end: " + e);
-				}
-				for(String e : time_end) {
-					System.out.println("time_end: " + e);
-				}
-				for(String e : deadLine) {
-					System.out.println("deadLine: " + e);
-				}
-				
-				//Setup complex datatypes - komplexe Datentypen konstruieren
-				LocationData location = new LocationData(street, town, postcode, country);
-				TimeData startTime = new TimeData(Integer.valueOf(date_start[2]), 
-													Integer.valueOf(date_start[1]), 
-													Integer.valueOf(date_start[0]), 
-													Integer.valueOf(time_start[0]), 
-													Integer.valueOf(time_start[1]), 
-													Integer.valueOf(time_start[2]));
-				TimeData endTime = new TimeData(Integer.valueOf(date_end[2]), 
-													Integer.valueOf(date_end[1]), 
-													Integer.valueOf(date_end[0]), 
-													Integer.valueOf(time_end[0]), 
-													Integer.valueOf(time_end[1]), 
-													Integer.valueOf(time_end[2]));
-				TimeData deadline = new TimeData(Integer.valueOf(deadLine[2]), 
-													Integer.valueOf(deadLine[1]), 
-													Integer.valueOf(deadLine[0]), 
-													Integer.valueOf(deadLine[3]), 
-													Integer.valueOf(deadLine[4]), 
-													Integer.valueOf(deadLine[5]));
-				
-				
-				Boolean success = app.makeAppointmentRequest(cid, name, description, location, startTime, endTime, deadline);
-				
-				if(success){
-					System.out.println(success);
-					request.setAttribute("pagetitle", "Success");
+				try {
+					
+					int postcode = Integer.valueOf(postcode_inp);
+					String[] date_start = startTime_date.split(":");
+					String[] time_start = startTime_time.split(":");
+					String[] date_end = endTime_date.split(":");
+					String[] time_end = endTime_time.split(":");
+					String[] deadLine = deadline_inp.split(":");
+					
+					//Setup complex datatypes - komplexe Datentypen konstruieren
+					LocationData location = new LocationData(street, town, postcode, country);
+					TimeData startTime = new TimeData(Integer.valueOf(date_start[2]), 
+														Integer.valueOf(date_start[1]), 
+														Integer.valueOf(date_start[0]), 
+														Integer.valueOf(time_start[0]), 
+														Integer.valueOf(time_start[1]), 
+														Integer.valueOf(time_start[2]));
+					TimeData endTime = new TimeData(Integer.valueOf(date_end[2]), 
+														Integer.valueOf(date_end[1]), 
+														Integer.valueOf(date_end[0]), 
+														Integer.valueOf(time_end[0]), 
+														Integer.valueOf(time_end[1]), 
+														Integer.valueOf(time_end[2]));
+					TimeData deadline = new TimeData(Integer.valueOf(deadLine[2]), 
+														Integer.valueOf(deadLine[1]), 
+														Integer.valueOf(deadLine[0]), 
+														Integer.valueOf(deadLine[3]), 
+														Integer.valueOf(deadLine[4]), 
+														Integer.valueOf(deadLine[5]));
+					
+					Boolean success = app.makeAppointmentRequest(cid, name, description, location, deadline, startTime, endTime);
+					
+					if(success){
+						System.out.println(success);
+						request.setAttribute("pagetitle", "Success");
+						request.setAttribute("navtype", "showCalendar");
+						request.getRequestDispatcher("/templates/showCreateConfirmation.ftl").forward(request, response);
+					 }else{
+						request.setAttribute("pagetitle", "Fail");
+						request.setAttribute("navtype", "showCalendar");
+						request.getRequestDispatcher("/templates/showCreateFail.ftl").forward(request, response);
+					 } 
+					break;
+				}catch(Exception e) {
+					
+					request.setAttribute("pagetitle", "FormInputError");
 					request.setAttribute("navtype", "showCalendar");
-					request.getRequestDispatcher("/templates/showCreateConfirmation.ftl").forward(request, response);
-				 }else{
-					request.setAttribute("pagetitle", "Fail");
-					request.setAttribute("navtype", "showCalendar");
-					request.getRequestDispatcher("/templates/showCreateFail.ftl").forward(request, response);
-				 } 
-				break;
+					request.getRequestDispatcher("templates/error.ftl").forward(request, response);;
+					break;
+				}
 				
 			default:
 				System.out.println("GroupmemberGUI: Action not found.." + (String)request.getAttribute("action"));

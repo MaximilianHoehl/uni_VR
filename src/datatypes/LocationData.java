@@ -7,7 +7,7 @@ public class LocationData {
 	private int postcode;
 	private String country;
 	
-	public LocationData(String street, String town, int postcode, String county) {
+	public LocationData(String street, String town, int postcode, String country) {
 		
 		this.street = street;
 		this.town = town;
