@@ -14,5 +14,9 @@ public class LocationData {
 		this.postcode = postcode;
 		this.country = country;
 	}
+	
+	public String getLocationstring(){
+		return street + ", " + String.valueOf(postcode) + ", " + town + ", " + country;
+	}
 
 }

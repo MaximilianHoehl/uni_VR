@@ -73,5 +73,19 @@ public class TimeData {
 	public void setSecond(int second) {
 		this.second = second;
 	}
+	
+	public Timestamp getTimestamp() throws ParseException {
+		
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date date = df.parse(String.valueOf(year) + "-" 
+							+ String.valueOf(month) + "-" 
+							+ String.valueOf(day) + " " 
+							+ String.valueOf(hour) + ":" 
+							+ String.valueOf(minute) + ":" 
+							+ String.valueOf(second));
+		long time = date.getTime();
+		
+		return new Timestamp(time);
+	}
 
 }

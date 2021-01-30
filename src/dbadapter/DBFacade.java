@@ -101,7 +101,7 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 		}
 
 	@Override
-	public Boolean addAppointment(int aid, String name, String description, LocationData location,
+	public Boolean addAppointment(int cid, String name, String description, LocationData location,
 			TimeData deadline, TimeData startTime, TimeData endTime) {
 		
 		//check if requested Appointment overlaps
@@ -145,6 +145,32 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 						if(rs.getInt("count(*)")==0) {
 							System.out.println("No overlap");
 							System.out.println(rs.getInt("count(*)")==0);
+							
+							String sqlInsertA = "INSERT INTO appointments"
+									+ " (cid, name, description, location, startTime, endTime, deadline, finalized)"
+									+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+							try(PreparedStatement psI = connection.prepareStatement(sqlInsertA)){
+								
+								psI.setInt(1, cid);
+								psI.setString(2, name);
+								psI.setString(3, description);
+								psI.setString(4, location.getLocationstring());
+								psI.setTimestamp(5, startTime.getTimestamp());
+								psI.setTimestamp(6, endTime.getTimestamp());
+								psI.setTimestamp(7, deadline.getTimestamp());
+								psI.setBoolean(8, false);
+								try{
+									psI.executeUpdate();
+									return true;
+									
+								}catch(Exception e) {
+									e.printStackTrace();
+									System.out.println("Block4 failed");
+								}
+							}catch(Exception e) {
+								e.printStackTrace();
+								System.out.println("Block3 failed");
+							}
 						}else {
 							System.out.println("OVERLAP");
 							System.out.println(rs.getInt("count(*)")==0);

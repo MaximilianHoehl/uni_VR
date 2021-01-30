@@ -38,11 +38,11 @@ public class CA_Application implements CmCmds {
 	}
 
 	@Override
-	public Boolean makeAppointmentRequest(int aid, String name, String description, LocationData location,
+	public Boolean makeAppointmentRequest(int cid, String name, String description, LocationData location,
 			TimeData deadline, TimeData startTime, TimeData endTime) {
 		
 		DBFacade dbFacade = DBFacade.getInstance();
-		return dbFacade.addAppointment(aid, name, description, location, deadline, startTime, endTime);
+		return dbFacade.addAppointment(cid, name, description, location, deadline, startTime, endTime);
 	
 	}
 

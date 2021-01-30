@@ -5,11 +5,11 @@
 <form id="selectIdentity" method="POST" name="identity" action="selectGCWebpage?action=showCalendar">
 	<legend>Required Information</legend>
 	
-	<label>Assumed Identity: </label>
+	<label>Assumed Groupmembership: </label>
 	<select id="identity" name="identity" form="selectIdentity">
-		<option value="1">User1</option>
-		<option value="2">User2</option>
-		<option value="3">User3</option>
+		<option value="1">Group1</option>
+		<option value="2">Group2</option>
+		<option value="3">Group3</option>
 	</select>
 	<button type="submit" id="" name="" value="Submit">Show Calendar</button>
 </form>
@@ -17,33 +17,57 @@
 <h4>Create a new Appointment for your Group<br></h4>
 
 <form method="POST" action="createAppointment?action=createAppointment">
+	<label>Assumed Groupmembership: </label>
+	<select id="identity" name="identity" form="selectIdentity">
+		<option value="1">Group1</option>
+		<option value="2">Group2</option>
+		<option value="3">Group3</option>
+	</select>
 	<fieldset id="createAppointment">
 		<legend>Required Information</legend>
 		<div>
-			<label>Terminname: </label>
+			<label>Name: </label>
 			<input type="text" name="name" id="name">
 	    </div>
-
 		<div>
-			<label>Beschreibung: </label>
+			<label>Description: </label>
 			<input type="text" name="description" id="">
 	    </div>
-
 		<div>
-			<label>Location: </label>
-			<input type="text" name="location">
+			<label>Street: </label>
+			<input type="text" name="street">
 	    </div>
 	    <div>
-			<label>From: </label>
-			<input type="text" name="startTime">
+			<label>Postcode: </label>
+			<input type="text" placeholder="NNNN" name="postcode">
 	    </div>
 	    <div>
-			<label>To: </label>
-			<input type="text" name="endTime">
+			<label>Town: </label>
+			<input type="text" name="town">
+	    </div>
+	    <div>
+			<label>Country: </label>
+			<input type="text" name="country">
+	    </div>
+	    <div>
+			<label>From (date): </label>
+			<input type="text" placeholder="DD:MM:YYYY" name="startDate">
+	    </div>
+	    <div>
+			<label>From (time): </label>
+			<input type="text" placeholder="HH:MM:SS" name="startTime">
+	    </div>
+	    <div>
+			<label>To (date): </label>
+			<input type="text" placeholder="DD:MM:YYYY" name="endDate">
+	    </div>
+	    <div>
+			<label>To (time): </label>
+			<input type="text" placeholder="HH:MM:SS" name="endTime">
 	    </div>
 	    <div>
 			<label>Deadline: </label>
-			<input type="text" name="deadline">
+			<input type="text" placeholder="DD:MM:YYYY:HH:MM:SS" name="deadline">
 	    </div>
 	</fieldset>
 	<button type="submit" id="btn_createAppointment" name="createAppointment" value="Submit">Create New Appointment</button>
