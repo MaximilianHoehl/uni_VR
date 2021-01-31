@@ -21,9 +21,9 @@
 		<td>${ap.id}</td>
 		<td>${ap.name}</td>
 		<td>${ap.description}</td>
-		<td>${ap.location}</td>
-		<td>${ap.startTime}</td>
-		<td>${ap.endTime}</td>
+		<td>${ap.location.street}, ${ap.location.postcode}, ${ap.location.town}, ${ap.location.country}</td>
+		<td>${ap.startTime.dayString}.${ap.startTime.monthString}.${ap.startTime.yearString}<br>${ap.startTime.hourString}:${ap.startTime.minuteString} Uhr</td>
+		<td>${ap.endTime.dayString}.${ap.endTime.monthString}.${ap.endTime.yearString}<br>${ap.endTime.hourString}:${ap.endTime.minuteString} Uhr</td>
 	</tr>
 	</#list>
 </table>

@@ -44,6 +44,7 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 		//GroupCalendar-Variable deklarieren (bekommt den Rückgabewert)
 		//Declarate GroupCalendar-variable
 		GroupCalendar result = null;
+		ArrayList<AppointmentData> appointmentList = new ArrayList<AppointmentData>();
 		System.out.println("getGroupCalendar");
 		
 		// Declare the necessary SQL queries.
@@ -65,39 +66,64 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 				ps.setInt(1, cid);
 				//SQL-Anfrage ausführen und das Ergebnis in "rs" speichern
 				try (ResultSet rs = ps.executeQuery()) { 
-					
-					
+			
 					while (rs.next()) {
-						//Fake List for debugging
-						ArrayList<AppointmentData> fakeList = new ArrayList<AppointmentData>();
-						LocationData fakeloc = new LocationData("Street", "town", 44687, "Country");
-						LocationData fakeloc2 = new LocationData("Street", "town", 14297, "Country");
-						TimeData faketd = new TimeData(1, 7, 9 ,6 ,7 ,2);
-						TimeData faketd2 = new TimeData(1, 7, 9 ,6 ,7 ,2);
-						TimeData faket3 = new TimeData(1, 7, 9 ,6 ,7 ,2);
-						TimeData faketd4 = new TimeData(1, 7, 9 ,6 ,7 ,2);
-						fakeList.add(new AppointmentData("Appointment1", fakeloc, faketd, faket3, "-", null, 1));
-						fakeList.add(new AppointmentData("Appointment2", fakeloc2, faketd2, faketd4, "-", null, 2));	
+						
+						String sqlSelectAppointments = "SELECT * FROM appointments WHERE cid=?";
+						try(PreparedStatement psSA = connection.prepareStatement(sqlSelectAppointments)){
+							System.out.println("DBFacade: FetchCalendarAppointments: prepared Appointment SELECT statement");
+							psSA.setInt(1, cid);
+							System.out.println("DBFacade: FetchCalendarAppointments: Setted cid value in prepared SELECT psSA statement: " + cid);
+							try(ResultSet res = psSA.executeQuery()){
+								System.out.println("DBFacade: FetchCalendarAppointments: executed Query psSA");
+								while(res.next()) {
+									System.out.println("----------");
+									System.out.println("DB Result: " + res.getInt(1) + res.getString(3) + res.getString(4) + res.getString(5));
+									System.out.println("DB Result: " + res.getTimestamp(6) + " " + res.getTimestamp(7) + " " + res.getTimestamp(8) + " " + res.getBoolean(9));
+									System.out.println("----------");
+									int res_id = res.getInt(1);
+									String res_name = res.getString(3); 
+									String res_description = res.getString(4);
+									LocationData res_location = new LocationData(res.getString(5));
+									TimeData res_startTime = new TimeData(res.getTimestamp(6));
+									TimeData res_endTime = new TimeData(res.getTimestamp(7));
+									TimeData res_deadline = new TimeData(res.getTimestamp(8));
+									Boolean res_finalized = res.getBoolean(9);
+									System.out.println("DBFacade: FetchCalendarAppointments: fetched data and created complex datatypes from DB result");
+									appointmentList.add(new AppointmentData(res_id, res_name, res_description, 
+											res_location, res_startTime, res_endTime, res_deadline, res_finalized));
+									System.out.println("DBFacade: FetchCalendarAppointments: Created AppointmentList from Calendar");
+								}
+								
+							}catch(Exception e) {
+								System.out.println("DBFacade: FetchCalendarAppointments: Block4 failed");
+								e.printStackTrace();
+							}
+						}catch(Exception e) {
+							System.out.println("DBFacade: FetchCalendarAppointments: Block3 failed");
+							e.printStackTrace();
+						}
 						
 						
-						result = new GroupCalendar(rs.getInt(1), rs.getString(2), rs.getString(3), fakeList);
+						result = new GroupCalendar(rs.getInt(1), rs.getString(2), rs.getString(3), appointmentList);
+						System.out.println("DBFacade: FetchCalendarAppointments: Created Result");
 					}
-					System.out.println("Returned GroupCalendarObject: " + result);
+					System.out.println("DBFacade: FetchCalendarAppointments: Returned Result");
 					return result;
 		
 					
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.out.println("Block2 failed");
+				System.out.println("Fetch Calendar: Block2 failed");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Block1 failed");
+			System.out.println("Fetch Calendar: Block1 failed");
 		}
 		
 		System.out.println("fetchCalendarInfos ran through! :(");
-		return result; 
+		return null; 
 		}
 
 	@Override
@@ -150,7 +176,9 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 									+ " (cid, name, description, location, startTime, endTime, deadline, finalized)"
 									+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 							try(PreparedStatement psI = connection.prepareStatement(sqlInsertA)){
-								
+								System.out.println("TimestampStart passed to Timestamp-function: " + startTime.getTimestamp());
+								System.out.println("TimestampEnd passed to Timestamp-function: " + endTime.getTimestamp());
+								System.out.println("TimestampDeadline passed to Timestamp-function: " + deadline.getTimestamp());
 								psI.setInt(1, cid);
 								psI.setString(2, name);
 								psI.setString(3, description);

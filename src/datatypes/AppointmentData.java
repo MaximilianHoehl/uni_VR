@@ -9,8 +9,9 @@ public class AppointmentData {
 	private String description;
 	private TimeData deadline;
 	private int id;
+	private Boolean finalized;
 	
-	public AppointmentData (String name, LocationData location, TimeData startTime, TimeData endTime, String description, TimeData deadline, int id) {
+	public AppointmentData (int id, String name,  String description, LocationData location, TimeData startTime, TimeData endTime, TimeData deadline, Boolean finalized) {
 		
 		this.name = name;
 		this.location = location;
@@ -19,6 +20,7 @@ public class AppointmentData {
 		this.description = description;
 		this.deadline = deadline; 
 		this.id = id;
+		this.finalized = finalized;
 	}
 
 	public String getName() {
@@ -47,6 +49,10 @@ public class AppointmentData {
 
 	public int getId() {
 		return id;
+	}
+
+	public Boolean getFinalized() {
+		return finalized;
 	}
 	
 }

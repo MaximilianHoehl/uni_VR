@@ -17,6 +17,7 @@ public class TimeData {
 	
 	public TimeData(int year, int month, int day, int hour, int minute, int second) {
 		
+		
 		this.setYear(year);
 		this.setMonth(month);
 		this.setDay(day);
@@ -24,6 +25,39 @@ public class TimeData {
 		this.setMinute(minute);
 		this.setSecond(second);	
 		
+	}
+	
+	@SuppressWarnings("deprecation")
+	public TimeData(Timestamp timestamp) {
+		
+		String[] e = timestamp.toString().split("\\s+");
+		for(String i : e) {
+			System.out.println(i);
+		}
+		
+		
+		year = Integer.valueOf(e[0].split("-")[0]);
+		month = Integer.valueOf(e[0].split("-")[1]);
+		day = Integer.valueOf(e[0].split("-")[2]);
+		hour = Integer.valueOf(e[1].split(":")[0]);
+		minute = Integer.valueOf(e[1].split(":")[1]);
+		second = Math.round(Float.valueOf(e[1].split(":")[2]));
+		
+		/*String[][] input;
+		 * for(String i : e) {
+			for(String j : i.split(i.contains("-")?"-":":")) {
+				input[i.indexOf(e)][j] = null; 
+			}
+		}*/
+		System.out.println("TimeData init: start");
+		/*Date date = new Date(timestamp.getTime());
+		setYear(date.getYear());
+		setMonth(date.getMonth());
+		setDay(date.getDay());
+		setHour(date.getHours());
+		setMinute(date.getMinutes());
+		setSecond(date.getSeconds());*/
+		System.out.println("TimeData inti: done: " + year + " " + month + " " + day + " " + hour + " " + minute + " " + second + " ");
 	}
 
 	public int getYear() {
@@ -74,18 +108,58 @@ public class TimeData {
 		this.second = second;
 	}
 	
+	//Get Values as String for representation
+	public String getYearString() {
+		
+		String yearString = String.valueOf(year);
+		return yearString;
+	}
+	public String getMonthString() {
+		
+		String monthString = convert(month);
+		return monthString;
+	}
+	public String getDayString() {
+		
+		String dayString = convert(day);
+		return dayString;
+	}
+	public String getHourString() {
+		
+		String hourString = convert(hour);
+		return hourString;
+	}
+	public String getMinuteString() {
+		
+		String minuteString = convert(minute);
+		return minuteString;
+	}
+	public String getSecondString() {
+		
+		String secondString = convert(second);
+		return secondString;
+	}
+	//Specal Getter
 	public Timestamp getTimestamp() throws ParseException {
 		
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		System.out.println("TimeData raw vars: " + year + " " + month + " " + day + " " + hour + " " + minute + " " + second + " ");
+		
 		Date date = df.parse(String.valueOf(year) + "-" 
 							+ String.valueOf(month) + "-" 
 							+ String.valueOf(day) + " " 
 							+ String.valueOf(hour) + ":" 
 							+ String.valueOf(minute) + ":" 
 							+ String.valueOf(second));
+		System.out.println("Timedata Dateobject-String" + date.toString());
 		long time = date.getTime();
 		
 		return new Timestamp(time);
+	}
+	//Internal methods
+	private String convert(int inp) {
+		
+		return inp>9?String.valueOf(inp):"0" +String.valueOf(inp);
 	}
 
 }
