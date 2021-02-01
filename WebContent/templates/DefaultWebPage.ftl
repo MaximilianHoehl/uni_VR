@@ -34,7 +34,7 @@
 	    </div>
 		<div>
 			<label>Street: </label>
-			<input type="text" name="street">
+			<input type="text" placeholder="No Whitespaces!" name="street">
 	    </div>
 	    <div>
 			<label>Postcode: </label>

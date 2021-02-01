@@ -13,6 +13,7 @@ public class GroupCalendar {
 	public GroupCalendar( int cid, String name, String description, ArrayList<AppointmentData> Appointments) {
 		
 		this.cid = cid;
+		this.groupID = cid;
 		this.name = name;
 		this.description = description;
 		this.Appointments = Appointments;

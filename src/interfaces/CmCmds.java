@@ -13,6 +13,5 @@ public interface CmCmds {
 		
 		public Appointment suggestingDate();
 		
-		public CalendarInfos getCalendarInfos();
 }
 

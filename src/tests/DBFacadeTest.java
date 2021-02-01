@@ -7,6 +7,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
@@ -19,7 +21,6 @@ import datatypes.LocationData;
 import datatypes.TimeData;
 import dbadapter.Configuration;
 import dbadapter.DBFacade;
-import dbadapter.HolidayOffer;
 import junit.framework.TestCase;
 
 class DBFacadeTest extends TestCase {
@@ -68,9 +69,26 @@ class DBFacadeTest extends TestCase {
 			e.printStackTrace();
 		}
 	}
+	
 	@AfterEach
 	protected
 	void tearDown() throws Exception {
+		try {
+			
+			Connection connection = DriverManager.getConnection(
+			"jdbc:" + Configuration.getType() + "://" + Configuration.getServer() + ":"
+			+ Configuration.getPort() + "/" + Configuration.getDatabase(),
+			Configuration.getUser(), Configuration.getPassword());
+			
+			String reset = "DELETE FROM appointments"; //Existing groupcalendar in DB is assumed since its not part of the task 
+			PreparedStatement ps_reset = connection.prepareStatement(reset);
+			ps_reset.executeUpdate();
+			System.out.println("SETUP: successfully executed RESET Query");
+		}catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@Test
@@ -136,7 +154,7 @@ class DBFacadeTest extends TestCase {
 		
 	}
 	@Test
-	protected void testFetchCalendarInfos() {
+	protected void testFetchCalendarInfos() throws ParseException {
 		
 		System.out.println("START TEST: FetchCalendarInfos");
 		
@@ -145,10 +163,13 @@ class DBFacadeTest extends TestCase {
 		GroupCalendar result = fixture.fetchCalendarInfos(1, null, null, null, null);
 		
 		//Check if anything returned
-		System.out.println("RESULT: " + result);
 		assertTrue(result != null);
 		
 		//Check if correct data returned
+		assertTrue(result.getGroupID() == 1);
+		assertEquals(result.getName(), "Calendar1");
+		assertEquals(result.getDescription(), "Kalender der Gruppe 1");
+		assertTrue(result.getAppointments() instanceof ArrayList);
 		
 	}
 

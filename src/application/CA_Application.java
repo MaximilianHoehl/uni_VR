@@ -58,10 +58,6 @@ public class CA_Application implements CmCmds {
 		return null;
 	}
 
-	@Override
-	public CalendarInfos getCalendarInfos() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 }
