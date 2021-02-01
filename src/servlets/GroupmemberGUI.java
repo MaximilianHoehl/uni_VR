@@ -33,13 +33,12 @@ public class GroupmemberGUI extends HttpServlet{
 		int cid = Integer.valueOf(request.getParameter("identity"));
 		
 		switch((String)request.getParameter("action")){
+			
 			case "showCalendar":
-				request.setAttribute("pagetitle", "My Calendar");
-				request.setAttribute("navtype", "showCalendar");
-
 				
 				GroupCalendar res = app.getCalendarInfos(cid, null, null, null, null);
-				
+				request.setAttribute("pagetitle", "My Calendar");
+				request.setAttribute("navtype", "showCalendar");
 				request.setAttribute("GroupCalendarInfo", res);
 				request.setAttribute("AppointmentList", res.getAppointments());
 				
@@ -47,8 +46,7 @@ public class GroupmemberGUI extends HttpServlet{
 				break;
 				
 			case "createAppointment":
-				
-				System.out.println("arrived at cA");
+
 				//Extract data from formular - Daten aus dem Formular extrahieren
 				String name = request.getParameter("name");
 				String description = request.getParameter("description");
@@ -62,14 +60,10 @@ public class GroupmemberGUI extends HttpServlet{
 				String endTime_time = request.getParameter("endTime");
 				String deadline_inp = request.getParameter("deadline");
 				
-				System.out.println(name + description + street
-						+ postcode_inp + town + country + 
-						startTime_date + startTime_time + endTime_date 
-						+endTime_time + deadline_inp);
-				
 				//Prepare data for constructors - Daten für Konstruktoren anpassen
 				try {
 					
+					//Extract postcode input - split on :
 					int postcode = Integer.valueOf(postcode_inp);
 					String[] date_start = startTime_date.split(":");
 					String[] time_start = startTime_time.split(":");
@@ -98,19 +92,24 @@ public class GroupmemberGUI extends HttpServlet{
 														Integer.valueOf(deadLine[4]), 
 														Integer.valueOf(deadLine[5]));
 					
+					//Make appointment request and store returned success-bool in varable
 					Boolean success = app.makeAppointmentRequest(cid, name, description, location, deadline, startTime, endTime);
 					
+					//Send response-webpage based on returned success-boolean
 					if(success){
 						System.out.println(success);
 						request.setAttribute("pagetitle", "Success");
 						request.setAttribute("navtype", "showCalendar");
+						
 						request.getRequestDispatcher("/templates/showCreateConfirmation.ftl").forward(request, response);
 					 }else{
 						request.setAttribute("pagetitle", "Fail");
 						request.setAttribute("navtype", "showCalendar");
+						
 						request.getRequestDispatcher("/templates/showCreateFail.ftl").forward(request, response);
 					 } 
 					break;
+					
 				}catch(Exception e) {
 					
 					request.setAttribute("pagetitle", "FormInputError");

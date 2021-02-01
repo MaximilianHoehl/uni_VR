@@ -1,6 +1,6 @@
 package timer;
 
-import application.VRApplication;
+//import application.VRApplication;
 
 /**
  * Timer class to call the method checkPayment in the application. Main method
@@ -12,8 +12,8 @@ import application.VRApplication;
 public class Timer {
 
 	public static void main(String[] args) {
-		VRApplication vrApp = new VRApplication();
-		vrApp.checkPayment();
+		//VRApplication vrApp = new VRApplication();
+		//vrApp.checkPayment();
 		System.out
 				.println("All bookings not paid and older than 14 days are successfully deleted");
 	}
