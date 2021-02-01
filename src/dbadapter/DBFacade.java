@@ -53,11 +53,7 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 
 		// Query all offers that fits to the given criteria.
 		//Verbindung zur Datenbank herstellen und in "connection"-objekt speichern
-		try (Connection connection = DriverManager
-				.getConnection(
-						"jdbc:" + Configuration.getType() + "://" + Configuration.getServer() + ":"
-								+ Configuration.getPort() + "/" + Configuration.getDatabase(),
-						Configuration.getUser(), Configuration.getPassword())) {
+		try (Connection connection = createDBConnection()) {
 			
 			//SQL Anfrage absichern 
 			//Create prepered statement
@@ -156,11 +152,7 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 				+ " OR ((a.startTime < " + startTimestamp +") AND (a.endTime > " + startTimestamp + "))";
 		System.out.println(sqlSelectOverlap);
 		
-		try (Connection connection = DriverManager
-				.getConnection(
-						"jdbc:" + Configuration.getType() + "://" + Configuration.getServer() + ":"
-								+ Configuration.getPort() + "/" + Configuration.getDatabase(),
-						Configuration.getUser(), Configuration.getPassword())) {
+		try (Connection connection = createDBConnection()) {
 			
 			//Create prepered statement - SQL Anfrage absichern 
 			try (PreparedStatement ps = connection.prepareStatement(sqlSelectOverlap)) {
@@ -249,6 +241,11 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 	public int get_confirmations() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	private Connection createDBConnection() throws SQLException {
+		return DriverManager.getConnection("jdbc:" + Configuration.getType() + "://" + Configuration.getServer() + ":"
+			+ Configuration.getPort() + "/" + Configuration.getDatabase(), Configuration.getUser(), Configuration.getPassword());
 	}
 	}
 

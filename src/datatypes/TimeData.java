@@ -43,21 +43,6 @@ public class TimeData {
 		minute = Integer.valueOf(e[1].split(":")[1]);
 		second = Math.round(Float.valueOf(e[1].split(":")[2]));
 		
-		/*String[][] input;
-		 * for(String i : e) {
-			for(String j : i.split(i.contains("-")?"-":":")) {
-				input[i.indexOf(e)][j] = null; 
-			}
-		}*/
-		System.out.println("TimeData init: start");
-		/*Date date = new Date(timestamp.getTime());
-		setYear(date.getYear());
-		setMonth(date.getMonth());
-		setDay(date.getDay());
-		setHour(date.getHours());
-		setMinute(date.getMinutes());
-		setSecond(date.getSeconds());*/
-		System.out.println("TimeData inti: done: " + year + " " + month + " " + day + " " + hour + " " + minute + " " + second + " ");
 	}
 
 	public int getYear() {

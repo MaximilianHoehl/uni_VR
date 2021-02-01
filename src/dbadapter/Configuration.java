@@ -22,32 +22,32 @@ public class Configuration {
 	private static final String PASSWORD = "";
 
 	public static String getServer() {
-		System.out.println("Got SERVER");
+		//System.out.println("Got SERVER");
 		return SERVER;
 	}
 
 	public static String getType() {
-		System.out.println("Got TYPE");
+		//System.out.println("Got TYPE");
 		return TYPE;
 	}
 
 	public static int getPort() {
-		System.out.println("Got PORT");
+		//System.out.println("Got PORT");
 		return PORT;
 	}
 
 	public static String getDatabase() {
-		System.out.println("Got DB");
+		//System.out.println("Got DB");
 		return DATABASE;
 	}
 
 	public static String getUser() {
-		System.out.println("Got USER");
+		//System.out.println("Got USER");
 		return USER;
 	}
 
 	public static String getPassword() {
-		System.out.println("Got PW");
+		//System.out.println("Got PW");
 		return PASSWORD;
 	}
 
