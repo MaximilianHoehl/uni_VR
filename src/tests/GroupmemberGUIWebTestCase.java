@@ -32,7 +32,7 @@ class GroupmemberGUIWebTestCase {
 	@Test
 	void defaultWebPage() {
 		// Start testing for guestgui
-		//tester.beginAt("DefaultWebPage");
+		tester.beginAt("DefaultWebPage");
 		System.out.println("triggered");
 		// Check all components of the search form
 		tester.assertTitleEquals("CalendarApplication - Welcome");
