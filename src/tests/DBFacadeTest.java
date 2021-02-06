@@ -167,7 +167,7 @@ class DBFacadeTest extends TestCase {
 		
 		//Check if correct data returned
 		assertTrue(result.getGroupID() == 1);
-		assertEquals(result.getName(), "Calendar1");
+		assertEquals(result.getName(), "Calendar 1");
 		assertEquals(result.getDescription(), "Kalender der Gruppe 1");
 		assertTrue(result.getAppointments() instanceof ArrayList);
 		

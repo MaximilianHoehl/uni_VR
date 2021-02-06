@@ -76,6 +76,7 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 									TimeData res_endTime = new TimeData(res.getTimestamp(7));
 									TimeData res_deadline = new TimeData(res.getTimestamp(8));
 									Boolean res_finalized = res.getBoolean(9);
+									
 									System.out.println("DBFacade: FetchCalendarAppointments: fetched data and created complex datatypes from DB result");
 									appointmentList.add(new AppointmentData(res_id, res_name, res_description, 
 											res_location, res_startTime, res_endTime, res_deadline, res_finalized));
@@ -115,7 +116,7 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 
 	@Override
 	public Boolean addAppointment(int cid, String name, String description, LocationData location,
-			TimeData deadline, TimeData startTime, TimeData endTime) {
+			TimeData deadline, TimeData startTime, TimeData endTime, String suggestions, String PlannedParticipants, String confirmations) {
 		
 		//check if requested Appointment overlaps
 		String sqlSelectOverlap = "SELECT COUNT(*) FROM appointments a"
@@ -135,19 +136,17 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 				ps.setTimestamp(5, startTimestamp);
 				ps.setTimestamp(6, startTimestamp);
 				//SQL-Anfrage ausführen und das Ergebnis in "rs" speichern
-				try (ResultSet rs = ps.executeQuery()) { 		
+				try (ResultSet rs = ps.executeQuery()) {
 					while(rs.next()) {
 						if(rs.getInt("count(*)")==0) {
 							System.out.println("No overlap");
 							System.out.println(rs.getInt("count(*)")==0);
 							
 							String sqlInsertA = "INSERT INTO appointments"
-									+ " (cid, name, description, location, startTime, endTime, deadline, finalized)"
-									+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+									+ " (cid, name, description, location, startTime, endTime, deadline, finalized, Suggestions, PlannedParticipants, Confirmations)"
+									+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 							try(PreparedStatement psI = connection.prepareStatement(sqlInsertA)){
-								System.out.println("TimestampStart passed to Timestamp-function: " + startTime.getTimestamp());
-								System.out.println("TimestampEnd passed to Timestamp-function: " + endTime.getTimestamp());
-								System.out.println("TimestampDeadline passed to Timestamp-function: " + deadline.getTimestamp());
+								
 								psI.setInt(1, cid);
 								psI.setString(2, name);
 								psI.setString(3, description);
@@ -156,6 +155,9 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 								psI.setTimestamp(6, endTime.getTimestamp());
 								psI.setTimestamp(7, deadline.getTimestamp());
 								psI.setBoolean(8, false);
+								psI.setString(9, suggestions);
+								psI.setString(10, PlannedParticipants);
+								psI.setString(11, confirmations);
 								try{
 									psI.executeUpdate();
 									return true;
@@ -188,6 +190,63 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 			return false;
 		}
 		return false;
+	}
+	
+	public ArrayList<Appointment> getUnfinalizedAppointments(){
+		
+		ArrayList<Appointment> result = new ArrayList<Appointment>();
+		try (Connection connection = createDBConnection()) {
+			String sql = "SELECT * FROM appointments WHERE finalized=false";
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				int res_id = rs.getInt(1);
+				int res_cid = rs.getInt(2);
+				String res_name = rs.getString(3); 
+				String res_description = rs.getString(4);
+				LocationData res_location = new LocationData(rs.getString(5));
+				TimeData res_startTime = new TimeData(rs.getTimestamp(6));
+				TimeData res_endTime = new TimeData(rs.getTimestamp(7));
+				TimeData res_deadline = new TimeData(rs.getTimestamp(8));
+				Boolean res_finalized = rs.getBoolean(9);
+				String res_suggestions = rs.getString(10);
+				String res_plannedParticipants = rs.getString(11);
+				String res_Confirmations = rs.getString(12);
+				result.add(new Appointment(res_id, res_cid, res_name, res_description, res_location, res_startTime, res_endTime, res_deadline, res_finalized, res_suggestions, res_plannedParticipants, res_Confirmations));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public Appointment getAppointmentById(int id) {
+		
+		Appointment result = null;
+		try (Connection connection = createDBConnection()) {
+			String sql = "SELECT * FROM appointment WHERE id=?";
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				int res_id = rs.getInt(1);
+				int res_cid = rs.getInt(2);
+				String res_name = rs.getString(3); 
+				String res_description = rs.getString(4);
+				LocationData res_location = new LocationData(rs.getString(5));
+				TimeData res_startTime = new TimeData(rs.getTimestamp(6));
+				TimeData res_endTime = new TimeData(rs.getTimestamp(7));
+				TimeData res_deadline = new TimeData(rs.getTimestamp(8));
+				Boolean res_finalized = rs.getBoolean(9);
+				String res_suggestions = rs.getString(10);
+				String res_plannedParticipants = rs.getString(11);
+				String res_Confirmations = rs.getString(12);
+				result = new Appointment(res_id, res_cid, res_name, res_description, res_location, res_startTime, res_endTime, res_deadline, res_finalized, res_suggestions, res_plannedParticipants, res_Confirmations);
+				return result;
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override

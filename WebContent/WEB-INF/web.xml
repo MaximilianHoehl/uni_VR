@@ -67,6 +67,22 @@
     <url-pattern>/selectGCWebpage</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>SelectAServlet</servlet-name>
+    <servlet-class>servlets.SelectAServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SelectAServlet</servlet-name>
+    <url-pattern>/selectAWebPage</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AppointmentServlet</servlet-name>
+    <servlet-class>servlets.AppointmentServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AppointmentServlet</servlet-name>
+    <url-pattern>/appointment</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>cA</servlet-name>
     <servlet-class>servlets.GroupmemberGUI</servlet-class>
   </servlet>

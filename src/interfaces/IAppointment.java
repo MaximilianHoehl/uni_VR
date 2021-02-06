@@ -6,7 +6,7 @@ import datatypes.TimeData;
 public interface IAppointment {
 	
 	public Boolean addAppointment(int aid, String name, String description, LocationData location,
-			TimeData deadline, TimeData startTime, TimeData endTime);
+			TimeData deadline, TimeData startTime, TimeData endTime, String suggestions, String plannedParticipants, String confirmations);
 	
 	public Boolean setChosenDate();
 	

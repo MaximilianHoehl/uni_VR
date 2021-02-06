@@ -71,5 +71,8 @@
 	</fieldset>
 	<button type="submit" id="btn_createAppointment" name="createAppointment" value="Submit">Create New Appointment</button>
 </form>
+<form action="/VR/selectAWebPage" method="GET">
+	<button type="submit" id="" name="selectAWebPage" value="Submit">Pending Requests</button>
+</form>
 
 <#include "footer.ftl">

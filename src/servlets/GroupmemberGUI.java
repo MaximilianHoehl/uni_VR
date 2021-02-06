@@ -29,14 +29,14 @@ public class GroupmemberGUI extends HttpServlet{
 		
 		
 		CA_Application app = CA_Application.createInstance();
-		
-		int cid = Integer.valueOf(request.getParameter("identity"));
+		//UserID for debug and showcase purpose - not contained in diagrams
+		int uid = Integer.valueOf(request.getParameter("identity"));
 		
 		switch((String)request.getParameter("action")){
 			
 			case "showCalendar":
 				
-				GroupCalendar res = app.getCalendarInfos(cid, null, null, null, null);
+				GroupCalendar res = app.getCalendarInfos(1, null, null, null, null);
 				request.setAttribute("pagetitle", "My Calendar");
 				request.setAttribute("navtype", "showCalendar");
 				request.setAttribute("GroupCalendarInfo", res);
@@ -93,7 +93,7 @@ public class GroupmemberGUI extends HttpServlet{
 														Integer.valueOf(deadLine[5]));
 					
 					//Make appointment request and store returned success-bool in varable
-					Boolean success = app.makeAppointmentRequest(cid, name, description, location, deadline, startTime, endTime);
+					Boolean success = app.makeAppointmentRequest(cid, name, description, location, deadline, startTime, endTime, "testSuggestions", "testPlannedParticipants", "testConfirmations");
 					
 					//Send response-webpage based on returned success-boolean
 					if(success){
