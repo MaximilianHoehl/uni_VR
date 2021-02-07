@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import application.CA_Application;
 import datatypes.Appointment;
 import dbadapter.DBFacade;
+import debugging.Debugging;
 
 //Returns Index
 public class SelectAServlet extends HttpServlet {
@@ -18,6 +19,10 @@ public class SelectAServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+		
+		//Only for Debugging
+		int uid = Integer.valueOf(request.getParameter("identity"));
+		Debugging.setCurrentUser(uid);
 
 		// Set pagetitle and navtype
 		request.setAttribute("pagetitle", "Unfinalized Appointments");

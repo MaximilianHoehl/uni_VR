@@ -48,9 +48,9 @@ public class CA_Application implements CmCmds {
 	}
 
 	@Override
-	public Appointment selectingDate() {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean selectingDate(int uid, int sid, int aid) {
+		DBFacade dbFacade = DBFacade.getInstance();
+		return dbFacade.setChosenDate(uid, sid, aid);
 	}
 
 	@Override

@@ -118,7 +118,7 @@ public class GroupmemberGUI extends HttpServlet{
 					
 					request.setAttribute("pagetitle", "FormInputError");
 					request.setAttribute("navtype", "showCalendar");
-					request.getRequestDispatcher("templates/error.ftl").forward(request, response);;
+					request.getRequestDispatcher("templates/error.ftl").forward(request, response);
 					break;
 				}
 				

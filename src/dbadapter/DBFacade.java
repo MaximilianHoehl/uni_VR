@@ -243,9 +243,32 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 	}
 
 	@Override
-	public Boolean setChosenDate() {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean setChosenDate(int uid, int sid, int aid) {
+		
+		String clearConfirmations = "DELETE FROM confirmations WHERE aid=? AND uid=?";
+		String insertSugg = "INSERT INTO confirmations (uid, sid, aid) VALUES (?, ?, ?)";
+		try(Connection connection = createDBConnection()){
+			PreparedStatement psCon = connection.prepareStatement(clearConfirmations);
+			psCon.setInt(1, aid);
+			psCon.setInt(2, uid);
+			PreparedStatement psSugg = connection.prepareStatement(insertSugg);
+			psSugg.setInt(1, uid);
+			psSugg.setInt(2, sid);
+			psSugg.setInt(3, aid);
+			try {
+				psCon.executeUpdate();
+				psSugg.executeUpdate();
+				return true;
+			}catch(Exception e) {
+				System.out.println("DBFACADE: setChosenDate: FAILED AT BLOCK2");
+				e.printStackTrace();
+				return false;
+			}
+		}catch(Exception e) {
+			System.out.println("DBFACADE: setChosenDate: FAILED AT BLOCK1");
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override

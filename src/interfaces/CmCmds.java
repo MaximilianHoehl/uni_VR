@@ -13,7 +13,7 @@ public interface CmCmds {
 		
 		public ArrayList<Appointment> getUnfinalizedAppointments(int cid);
 		
-		public Appointment selectingDate();
+		public Boolean selectingDate(int uid, int sid, int aid);
 		
 		public Appointment suggestingDate();
 		

@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class Suggestion {
 	
 	private int id;
-	private int userID;
+	private int userID; //Creator!
 	private int aid;
 	private Timestamp startTime;
 	private Timestamp endTime;

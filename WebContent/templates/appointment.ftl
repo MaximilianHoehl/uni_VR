@@ -2,6 +2,7 @@
 
 <h2>Appointment Suggestions</h2>
 
+<form method="POST" action="appointment?action=selectSuggestion">
 <table id="suggestions">
 	<tr>
 		<th>#</th>
@@ -18,7 +19,8 @@
 	</tr>
 	</#list>
 </table>
-<form action="/VR/index" method="GET">
+</form>
+<form action="appointment?action=newSuggestion" method="POST">
 	<button type="submit" id="" name="" value="Submit">New Suggestion</button>
 </form>
 <br/>

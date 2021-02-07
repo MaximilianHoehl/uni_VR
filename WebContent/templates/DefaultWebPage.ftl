@@ -4,7 +4,7 @@
 
 <form id="selectIdentity" method="POST" name="identity" action="selectGCWebpage?action=showCalendar">
 	
-	<label>Assumed Identity: </label>
+	<label>!!DEBUG!! Assumed Identity: </label>
 	<select id="identity" name="identity" form="selectIdentity">
 		<option value="1">User1</option>
 		<option value="2">User2</option>
@@ -16,7 +16,7 @@
 <h4>Create a new Appointment for your Group<br></h4>
 
 <form method="POST" action="createAppointment?action=createAppointment">
-	<label>Assumed Identity: </label>
+	<label>!!DEBUG!! Assumed Identity: </label>
 	<select id="identity" name="identity" form="selectIdentity">
 		<option value="1">User1</option>
 		<option value="2">User2</option>
@@ -76,6 +76,12 @@
 	<button type="submit" id="btn_createAppointment" name="createAppointment" value="Submit">Create New Appointment</button>
 </form>
 <form action="/VR/selectAWebPage" method="GET">
+<label>!!DEBUG!! Assumed Identity: </label>
+	<select id="identity" name="identity" form="selectIdentity">
+		<option value="1">User1</option>
+		<option value="2">User2</option>
+		<option value="3">User3</option>
+	</select>
 	<button type="submit" id="" name="selectAWebPage" value="Submit">Pending Requests</button>
 </form>
 
