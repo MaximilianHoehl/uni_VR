@@ -15,7 +15,7 @@ public interface CmCmds {
 		
 		public Boolean selectingDate(int uid, int sid, int aid);
 		
-		public Appointment suggestingDate();
+		public Boolean suggestingDate(int uid, int aid, TimeData startTime, TimeData endTime);
 		
 }
 

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import application.CA_Application;
 import datatypes.Appointment;
 import datatypes.Suggestion;
+import datatypes.TimeData;
 import dbadapter.DBFacade;
 import debugging.Debugging;
 
@@ -21,6 +22,7 @@ public class AppointmentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	ArrayList<Suggestion> appointmentSuggestions;
+	int clickedAppointmentID;
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 
@@ -28,10 +30,10 @@ public class AppointmentServlet extends HttpServlet {
 		request.setAttribute("pagetitle", "Welcome");
 		request.setAttribute("navtype", "general");
 		
-		int id = Integer.valueOf(request.getParameter("clickedAppointmentID"));
+		clickedAppointmentID = Integer.valueOf(request.getParameter("clickedAppointmentID"));
 		CA_Application ca = CA_Application.createInstance();
 		
-		appointmentSuggestions = ca.getSuggestions(id);
+		appointmentSuggestions = ca.getSuggestions(clickedAppointmentID);
 		for(Suggestion s : appointmentSuggestions) {
 			System.out.println("-----SUGGESTION-----");
 			System.out.println(s.getId());
@@ -80,6 +82,8 @@ public class AppointmentServlet extends HttpServlet {
 				}
 				
 			try {
+				request.setAttribute("pagetitle", "Welcome");
+				request.setAttribute("navtype", "general");
 				request.getRequestDispatcher("/templates/showselectstatus.ftl").forward(request, response);
 			} catch (ServletException | IOException e) {
 				// TODO Auto-generated catch block
@@ -87,6 +91,45 @@ public class AppointmentServlet extends HttpServlet {
 			}
 				break;
 			case "newSuggestion":
+				
+				String startTime_date = request.getParameter("startDate");
+				String startTime_time = request.getParameter("startTime");
+				String endTime_date = request.getParameter("endDate");
+				String endTime_time = request.getParameter("endTime");
+				
+				String[] date_start = startTime_date.split(":");
+				String[] time_start = startTime_time.split(":");
+				String[] date_end = endTime_date.split(":");
+				String[] time_end = endTime_time.split(":");
+				
+				TimeData startTime = new TimeData(Integer.valueOf(date_start[2]), 
+						Integer.valueOf(date_start[1]), 
+						Integer.valueOf(date_start[0]), 
+						Integer.valueOf(time_start[0]), 
+						Integer.valueOf(time_start[1]), 
+						Integer.valueOf(time_start[2]));
+				TimeData endTime = new TimeData(Integer.valueOf(date_end[2]), 
+						Integer.valueOf(date_end[1]), 
+						Integer.valueOf(date_end[0]), 
+						Integer.valueOf(time_end[0]), 
+						Integer.valueOf(time_end[1]), 
+						Integer.valueOf(time_end[2]));
+				
+				int userID = Debugging.getCurrentUser();
+				
+				if(ca.suggestingDate(userID, clickedAppointmentID, startTime, endTime)) {
+					request.setAttribute("success", 1);
+				}else {
+					request.setAttribute("success", 0);
+				}
+				try {
+					request.setAttribute("pagetitle", "Welcome");
+					request.setAttribute("navtype", "general");
+					request.getRequestDispatcher("/templates/showSuggestStatus.ftl").forward(request, response);
+				} catch (ServletException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				break;
 			default:
 				break;

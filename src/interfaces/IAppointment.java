@@ -14,7 +14,7 @@ public interface IAppointment {
 	
 	public Boolean setChosenDate(int uid, int sid, int aid);
 	
-	public Boolean saveAppointment();
+	public Boolean saveSuggestion(int uid, int aid, TimeData startTime, TimeData endTime);
 	
 	public ArrayList<Suggestion> fetchSuggestions(int aid);
 	

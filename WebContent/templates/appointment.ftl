@@ -20,8 +20,27 @@
 	</#list>
 </table>
 </form>
+<h3>Suggest another date</h3>
 <form action="appointment?action=newSuggestion" method="POST">
-	<button type="submit" id="" name="" value="Submit">New Suggestion</button>
+	<fieldset id="createSuggestion">
+	<div>
+		<label>From (date): </label>
+		<input type="text" placeholder="DD:MM:YYYY" name="startDate">
+    </div>
+    <div>
+		<label>From (time): </label>
+		<input type="text" placeholder="HH:MM:SS" name="startTime">
+    </div>
+    <div>
+		<label>To (date): </label>
+		<input type="text" placeholder="DD:MM:YYYY" name="endDate">
+    </div>
+    <div>
+		<label>To (time): </label>
+		<input type="text" placeholder="HH:MM:SS" name="endTime">
+    </div>
+   	</fieldset>
+	<button type="submit" id="createSuggestion" name="createSuggestion" value="">New Suggestion</button>
 </form>
 <br/>
 

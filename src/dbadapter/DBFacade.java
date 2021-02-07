@@ -272,9 +272,23 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 	}
 
 	@Override
-	public Boolean saveAppointment() {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean saveSuggestion(int uid, int aid, TimeData startTime, TimeData endTime) {
+		String sql = "INSERT INTO suggestions (uid, aid, startTime, endTime) VALUES (?, ?, ?, ?)";
+		try(Connection connection = createDBConnection()){
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, uid);
+			ps.setInt(2, aid);
+			ps.setTimestamp(3, startTime.getTimestamp());
+			ps.setTimestamp(4, endTime.getTimestamp());
+			
+			ps.executeUpdate();
+			return true;
+			
+		}catch(Exception e) {
+			System.out.println("DBFACADE: saveSuggestion: FAILED AT BLOCK1");
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override

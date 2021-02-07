@@ -54,9 +54,9 @@ public class CA_Application implements CmCmds {
 	}
 
 	@Override
-	public Appointment suggestingDate() {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean suggestingDate(int uid, int aid, TimeData startTime, TimeData endTime) {
+		DBFacade dbFacade = DBFacade.getInstance();
+		return dbFacade.saveSuggestion(uid, aid, startTime, endTime);
 	}
 
 	@Override

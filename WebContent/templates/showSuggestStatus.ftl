@@ -1,7 +1,7 @@
 <#include "header.ftl">
 
 <#if success == 1>
-	<h2>You successfully selected an appointment-suggestion</h2>
+	<h2>You successfully inserted a new Suggestion</h2>
 <#else>
 	<h2>FAIL!</h2>
 </#if>
