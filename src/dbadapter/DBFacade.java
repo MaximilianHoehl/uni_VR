@@ -212,33 +212,6 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 		return false;
 	}
 	
-	public ArrayList<Appointment> getUnfinalizedAppointments(){
-		
-		ArrayList<Appointment> result = new ArrayList<Appointment>();
-		try (Connection connection = createDBConnection()) {
-			String sql = "SELECT * FROM appointments WHERE finalized=false";
-			PreparedStatement ps = connection.prepareStatement(sql);
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()) {
-				int res_id = rs.getInt(1);
-				int res_cid = rs.getInt(2);
-				String res_name = rs.getString(3); 
-				String res_description = rs.getString(4);
-				LocationData res_location = new LocationData(rs.getString(5));
-				TimeData res_startTime = new TimeData(rs.getTimestamp(6));
-				TimeData res_endTime = new TimeData(rs.getTimestamp(7));
-				TimeData res_deadline = new TimeData(rs.getTimestamp(8));
-				Boolean res_finalized = rs.getBoolean(9);
-				String res_suggestions = rs.getString(10);
-				String res_plannedParticipants = rs.getString(11);
-				String res_Confirmations = rs.getString(12);
-				result.add(new Appointment(res_id, res_cid, res_name, res_description, res_location, res_startTime, res_endTime, res_deadline, res_finalized, res_suggestions, res_plannedParticipants, res_Confirmations));
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
 	
 	public Appointment getAppointmentById(int id) {
 		
@@ -351,5 +324,74 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 			e.printStackTrace();
 			return false;
 		}	
+	}
+
+	@Override
+	public ArrayList<Suggestion> fetchSuggestions(int aid) {
+		
+		ArrayList<Suggestion> result = new ArrayList<Suggestion>();
+		try (Connection connection = createDBConnection()) {
+			String sqlSugg = "SELECT * FROM suggestions WHERE aid=?"; //COUNT for total Suggestion can also be calculated here
+			String sqlConf = "SELECT COUNT(*) FROM confirmations WHERE sid=?";
+			PreparedStatement psSugg = connection.prepareStatement(sqlSugg);
+			psSugg.setInt(1, aid);
+			ResultSet rsSugg = psSugg.executeQuery();
+			while(rsSugg.next()) {
+				try {
+					PreparedStatement psConf = connection.prepareStatement(sqlConf);
+					psConf.setInt(1, rsSugg.getInt("sid")); //get suggestionID and set it to sql request
+					ResultSet rsConf = psConf.executeQuery();
+					while(rsConf.next()) {
+						int confirmationCount = rsConf.getInt(1);
+						result.add(new Suggestion(rsSugg.getInt("sid"), rsSugg.getInt("uid"), rsSugg.getInt("aid"),
+								rsSugg.getTimestamp("startTime"), rsSugg.getTimestamp("endTime"), confirmationCount));
+					}
+				}catch(Exception e) {
+					System.out.println("DBFACADE: FETCHSUGGESTIONS: FAILED AT BLOCK2");
+					e.printStackTrace();
+					return null;
+				}
+				
+			}
+			int requiredConfirmationCount = result.size();
+			System.out.println("FETCHED SUGGESTIONS; CONFIRMATIONS. TOTAL CONFIRMATIONCOUNT: " + requiredConfirmationCount);
+			for(Suggestion s : result) {
+				s.setRequiredConfirmations(requiredConfirmationCount);
+			}
+			return result;
+		}catch(Exception e) {
+			System.out.println("DBFACADE: FETCHSUGGESTIONS: FAILED AT BLOCK1");
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public ArrayList<Appointment> fetchUnfinalizedAppointments(int cid) {
+		ArrayList<Appointment> result = new ArrayList<Appointment>();
+		try (Connection connection = createDBConnection()) {
+			String sql = "SELECT * FROM appointments WHERE cid=? AND finalized=false";
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, cid);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				int res_id = rs.getInt(1);
+				int res_cid = rs.getInt(2);
+				String res_name = rs.getString(3); 
+				String res_description = rs.getString(4);
+				LocationData res_location = new LocationData(rs.getString(5));
+				TimeData res_startTime = new TimeData(rs.getTimestamp(6));
+				TimeData res_endTime = new TimeData(rs.getTimestamp(7));
+				TimeData res_deadline = new TimeData(rs.getTimestamp(8));
+				Boolean res_finalized = rs.getBoolean(9);
+				String res_suggestions = rs.getString(10);
+				String res_plannedParticipants = rs.getString(11);
+				String res_Confirmations = rs.getString(12);
+				result.add(new Appointment(res_id, res_cid, res_name, res_description, res_location, res_startTime, res_endTime, res_deadline, res_finalized, res_suggestions, res_plannedParticipants, res_Confirmations));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

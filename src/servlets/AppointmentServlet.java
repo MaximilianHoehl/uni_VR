@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import application.CA_Application;
 import datatypes.Appointment;
 import datatypes.Suggestion;
 import dbadapter.DBFacade;
@@ -25,13 +26,17 @@ public class AppointmentServlet extends HttpServlet {
 		request.setAttribute("navtype", "general");
 		
 		int id = Integer.valueOf(request.getParameter("clickedAppointmentID"));
-		DBFacade df = DBFacade.getInstance();
-		Appointment appo = df.getAppointmentById(id);
+		CA_Application ca = CA_Application.createInstance();
 		
-		
-		
-		request.setAttribute("appointmentName", appo.getName());
-		//request.setAttribute("suggestions", suggestinList);
+		ArrayList<Suggestion> appointmentSuggestions = ca.getSuggestions(id);
+		for(Suggestion s : appointmentSuggestions) {
+			System.out.println("-----SUGGESTION-----");
+			System.out.println(s.getId());
+			System.out.println(s.getConfirmations());
+			System.out.println(s.getRequiredConfirmations());
+		}
+		//request.setAttribute("appointmentName", appointmentSuggestions.get(0).getAppointmentName());
+		request.setAttribute("suggestions", appointmentSuggestions);
 		try {
 			
 			request.getRequestDispatcher("/templates/appointment.ftl").forward(request, response);

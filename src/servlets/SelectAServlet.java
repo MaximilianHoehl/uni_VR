@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import application.CA_Application;
 import datatypes.Appointment;
 import dbadapter.DBFacade;
 
@@ -22,12 +23,11 @@ public class SelectAServlet extends HttpServlet {
 		request.setAttribute("pagetitle", "Unfinalized Appointments");
 		request.setAttribute("navtype", "general");
 		ArrayList<Appointment> appointmentList = new ArrayList<Appointment>();
-		DBFacade df = DBFacade.getInstance();
-		appointmentList = df.getUnfinalizedAppointments();
+		CA_Application ca = CA_Application.createInstance();
+		appointmentList = ca.getUnfinalizedAppointments(1); //hardcoded CalendarID
 		
 		request.setAttribute("appointmentList", appointmentList);
 
-		
 		try {
 			
 			request.getRequestDispatcher("/templates/selectAWebPage.ftl").forward(request, response);

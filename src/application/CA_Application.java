@@ -7,6 +7,7 @@ import datatypes.AppointmentData;
 import datatypes.CalendarInfos;
 import datatypes.GroupCalendar;
 import datatypes.LocationData;
+import datatypes.Suggestion;
 import datatypes.TimeData;
 import interfaces.CmCmds;
 
@@ -56,6 +57,18 @@ public class CA_Application implements CmCmds {
 	public Appointment suggestingDate() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ArrayList<Suggestion> getSuggestions(int aid) {
+		DBFacade dbFacade = DBFacade.getInstance();
+		return dbFacade.fetchSuggestions(aid);
+	}
+
+	@Override
+	public ArrayList<Appointment> getUnfinalizedAppointments(int cid) {
+		DBFacade dbFacade = DBFacade.getInstance();
+		return dbFacade.fetchUnfinalizedAppointments(cid);
 	}
 
 

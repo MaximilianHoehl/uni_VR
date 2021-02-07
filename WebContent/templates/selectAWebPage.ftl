@@ -13,7 +13,7 @@
 		<th>Location</th>
 		<th>Start Time</th>
 		<th>End Time</th>
-		<th>Suggestions</th>
+		
 	</tr>
 	<#list appointmentList as ap>
 	<tr>
@@ -23,7 +23,7 @@
 		<td>${ap.location.street}, ${ap.location.postcode}, ${ap.location.town}, ${ap.location.country}</td>
 		<td>${ap.startTime.dayString}.${ap.startTime.monthString}.${ap.startTime.yearString}<br>${ap.startTime.hourString}:${ap.startTime.minuteString} Uhr</td>
 		<td>${ap.endTime.dayString}.${ap.endTime.monthString}.${ap.endTime.yearString}<br>${ap.endTime.hourString}:${ap.endTime.minuteString} Uhr</td>
-		<td>${ap.suggestions}</td>
+		
 	</tr>
 	</#list>
 </table>

@@ -1,6 +1,10 @@
 package interfaces;
 
+import java.util.ArrayList;
+
+import datatypes.Appointment;
 import datatypes.LocationData;
+import datatypes.Suggestion;
 import datatypes.TimeData;
 
 public interface IAppointment {
@@ -11,6 +15,10 @@ public interface IAppointment {
 	public Boolean setChosenDate();
 	
 	public Boolean saveAppointment();
+	
+	public ArrayList<Suggestion> fetchSuggestions(int aid);
+	
+	public ArrayList<Appointment> fetchUnfinalizedAppointments(int cid);
 	
 	public TimeData get_deadlineDate();
 	
