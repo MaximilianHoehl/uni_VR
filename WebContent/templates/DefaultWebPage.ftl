@@ -4,11 +4,11 @@
 
 <form id="selectIdentity" method="POST" name="identity" action="selectGCWebpage?action=showCalendar">
 	
-	<label>Assumed Groupmembership: </label>
+	<label>Assumed Identity: </label>
 	<select id="identity" name="identity" form="selectIdentity">
-		<option value="1">Group1</option>
-		<option value="2">Group2</option>
-		<option value="3">Group3</option>
+		<option value="1">User1</option>
+		<option value="2">User2</option>
+		<option value="3">User3</option>
 	</select>
 	<button type="submit" id="" name="" value="Submit">Show Calendar</button>
 </form>
@@ -16,11 +16,11 @@
 <h4>Create a new Appointment for your Group<br></h4>
 
 <form method="POST" action="createAppointment?action=createAppointment">
-	<label>Assumed Groupmembership: </label>
+	<label>Assumed Identity: </label>
 	<select id="identity" name="identity" form="selectIdentity">
-		<option value="1">Group1</option>
-		<option value="2">Group2</option>
-		<option value="3">Group3</option>
+		<option value="1">User1</option>
+		<option value="2">User2</option>
+		<option value="3">User3</option>
 	</select>
 	<fieldset id="createAppointment">
 		
@@ -67,6 +67,10 @@
 	    <div>
 			<label>Deadline: </label>
 			<input type="text" placeholder="DD:MM:YYYY:HH:MM:SS" name="deadline">
+	    </div>
+	    <div>
+			<label>Planned Participants: </label>
+			<input type="text" placeholder="ID:ID:ID..." name="plannedParticipants">
 	    </div>
 	</fieldset>
 	<button type="submit" id="btn_createAppointment" name="createAppointment" value="Submit">Create New Appointment</button>

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import datatypes.*;
-
+import debugging.Debugging;
 import interfaces.IGroupCalendar;
 import interfaces.IAppointment;
 
@@ -145,8 +145,8 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 							String sqlInsertA = "INSERT INTO appointments"
 									+ " (cid, name, description, location, startTime, endTime, deadline, finalized, Suggestions, PlannedParticipants, Confirmations)"
 									+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+							String sqlInsertSugg = "INSERT INTO suggestions(uid, aid, startTime, endTime) VALUES (?, ?, ?, ?)";
 							try(PreparedStatement psI = connection.prepareStatement(sqlInsertA)){
-								
 								psI.setInt(1, cid);
 								psI.setString(2, name);
 								psI.setString(3, description);
@@ -160,7 +160,18 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 								psI.setString(11, confirmations);
 								try{
 									psI.executeUpdate();
-									return true;
+									try(PreparedStatement psS = connection.prepareStatement(sqlInsertSugg)){
+										psS.setInt(1, Debugging.getCurrentUser());
+										psS.setInt(2, getLastAppointmentID(connection));
+										psS.setTimestamp(3, startTime.getTimestamp());
+										psS.setTimestamp(4, endTime.getTimestamp());
+										psS.executeUpdate();
+										return true;
+									}catch(Exception e) {
+										e.printStackTrace();
+										System.out.println("Block5 failed");
+										return false;
+									}
 									
 								}catch(Exception e) {
 									e.printStackTrace();
@@ -282,5 +293,24 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 	private Connection createDBConnection() throws SQLException {
 		return DriverManager.getConnection("jdbc:" + Configuration.getType() + "://" + Configuration.getServer() + ":"
 			+ Configuration.getPort() + "/" + Configuration.getDatabase(), Configuration.getUser(), Configuration.getPassword());
+	}
+	
+	private int getLastAppointmentID(Connection connection) {
+		String sql = "SELECT id FROM appointments ORDER BY id DESC LIMIT 1";
+		
+		try {
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ResultSet rs;
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				
+				return rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
+		return 0;
 	}
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import datatypes.GroupCalendar;
 import datatypes.LocationData;
 import datatypes.TimeData;
+import debugging.Debugging;
 import application.CA_Application;
 
 public class GroupmemberGUI extends HttpServlet{
@@ -31,6 +32,7 @@ public class GroupmemberGUI extends HttpServlet{
 		CA_Application app = CA_Application.createInstance();
 		//UserID for debug and showcase purpose - not contained in diagrams
 		int uid = Integer.valueOf(request.getParameter("identity"));
+		Debugging.setCurrentUser(uid);
 		
 		switch((String)request.getParameter("action")){
 			
@@ -93,7 +95,7 @@ public class GroupmemberGUI extends HttpServlet{
 														Integer.valueOf(deadLine[5]));
 					
 					//Make appointment request and store returned success-bool in varable
-					Boolean success = app.makeAppointmentRequest(cid, name, description, location, deadline, startTime, endTime, "testSuggestions", "testPlannedParticipants", "testConfirmations");
+					Boolean success = app.makeAppointmentRequest(1, name, description, location, deadline, startTime, endTime, "testSuggestions", "testPlannedParticipants", "testConfirmations");
 					
 					//Send response-webpage based on returned success-boolean
 					if(success){
