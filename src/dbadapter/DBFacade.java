@@ -116,7 +116,7 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 
 	@Override
 	public Boolean addAppointment(int cid, String name, String description, LocationData location,
-			TimeData deadline, TimeData startTime, TimeData endTime, String suggestions, String PlannedParticipants, String confirmations) {
+			TimeData deadline, TimeData startTime, TimeData endTime, String[] pp, String suggestions, String PlannedParticipants, String confirmations) {
 		
 		//check if requested Appointment overlaps
 		String sqlSelectOverlap = "SELECT COUNT(*) FROM appointments a"
@@ -161,12 +161,21 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 								try{
 									psI.executeUpdate();
 									try(PreparedStatement psS = connection.prepareStatement(sqlInsertSugg)){
+										int lastAppointmentID = getLastAppointmentID(connection);
 										psS.setInt(1, Debugging.getCurrentUser());
-										psS.setInt(2, getLastAppointmentID(connection));
+										psS.setInt(2, lastAppointmentID);
 										psS.setTimestamp(3, startTime.getTimestamp());
 										psS.setTimestamp(4, endTime.getTimestamp());
 										psS.executeUpdate();
-										return true;
+										
+										if(insertPlannedParticipants(pp, lastAppointmentID, connection)) {
+											System.out.println("INSERTED PP");
+											return true;
+										}else {
+											System.out.println("FAILED PP");
+											return false;
+										}
+										
 									}catch(Exception e) {
 										e.printStackTrace();
 										System.out.println("Block5 failed");
@@ -312,5 +321,35 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 			return 0;
 		}
 		return 0;
+	}
+	
+	private Boolean insertPlannedParticipants(String[] pp, int aid, Connection connection) {
+		
+		//Create dynamic SQL String depending on array lenth
+		String sql = "INSERT INTO plannedparticipants (aid, uid) VALUES ";
+		for(int i=0; i<pp.length; i++) {
+			if(i==pp.length-1) {
+				sql += "(?, ?)";	//End of String
+			}else {
+				sql += "(?, ?), "; //Internal String
+			}
+		}
+		System.out.println("GENERATED DYNAMIC STRING: " + sql);
+		try {
+			PreparedStatement ps = connection.prepareStatement(sql);
+			int counter = 0;
+			for(String i : pp) {
+				counter++;
+				ps.setInt(counter, aid);
+				counter++;
+				ps.setInt(counter, Integer.valueOf(i));
+			}
+			System.out.println("INSERTED DYNAMIC VALUES");
+			ps.executeUpdate();
+			return true;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}	
 	}
 }

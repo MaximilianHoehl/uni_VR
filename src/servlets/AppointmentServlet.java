@@ -31,7 +31,7 @@ public class AppointmentServlet extends HttpServlet {
 		
 		
 		request.setAttribute("appointmentName", appo.getName());
-		request.setAttribute("suggestions", suggestinList);
+		//request.setAttribute("suggestions", suggestinList);
 		try {
 			
 			request.getRequestDispatcher("/templates/appointment.ftl").forward(request, response);

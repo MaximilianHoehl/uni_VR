@@ -61,6 +61,7 @@ public class GroupmemberGUI extends HttpServlet{
 				String endTime_date = request.getParameter("endDate");
 				String endTime_time = request.getParameter("endTime");
 				String deadline_inp = request.getParameter("deadline");
+				String pp_inp = request.getParameter("plannedParticipants");
 				
 				//Prepare data for constructors - Daten für Konstruktoren anpassen
 				try {
@@ -72,6 +73,7 @@ public class GroupmemberGUI extends HttpServlet{
 					String[] date_end = endTime_date.split(":");
 					String[] time_end = endTime_time.split(":");
 					String[] deadLine = deadline_inp.split(":");
+					String[] pp = pp_inp.split(":");
 					
 					//Setup complex datatypes - komplexe Datentypen konstruieren
 					LocationData location = new LocationData(street, town, postcode, country);
@@ -95,7 +97,7 @@ public class GroupmemberGUI extends HttpServlet{
 														Integer.valueOf(deadLine[5]));
 					
 					//Make appointment request and store returned success-bool in varable
-					Boolean success = app.makeAppointmentRequest(1, name, description, location, deadline, startTime, endTime, "testSuggestions", "testPlannedParticipants", "testConfirmations");
+					Boolean success = app.makeAppointmentRequest(1, name, description, location, deadline, startTime, endTime, pp, "testSuggestions", "testPlannedParticipants", "testConfirmations");
 					
 					//Send response-webpage based on returned success-boolean
 					if(success){
