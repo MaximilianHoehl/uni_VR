@@ -273,9 +273,10 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 
 	@Override
 	public Boolean saveSuggestion(int uid, int aid, TimeData startTime, TimeData endTime) {
-		String sql = "INSERT INTO suggestions (uid, aid, startTime, endTime) VALUES (?, ?, ?, ?)";
+		
+		String sqlInsert = "INSERT INTO suggestions (uid, aid, startTime, endTime) VALUES (?, ?, ?, ?)";
 		try(Connection connection = createDBConnection()){
-			PreparedStatement ps = connection.prepareStatement(sql);
+			PreparedStatement ps = connection.prepareStatement(sqlInsert);
 			ps.setInt(1, uid);
 			ps.setInt(2, aid);
 			ps.setTimestamp(3, startTime.getTimestamp());
@@ -364,17 +365,19 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 	}
 
 	@Override
-	public ArrayList<Suggestion> fetchSuggestions(int aid) {
+	public ArrayList<Suggestion> fetchSuggestions(int aid) { //Fetches all suggestions of an appointment
 		
 		ArrayList<Suggestion> result = new ArrayList<Suggestion>();
 		try (Connection connection = createDBConnection()) {
 			String sqlSugg = "SELECT * FROM suggestions WHERE aid=?"; //COUNT for total Suggestion can also be calculated here
 			String sqlConf = "SELECT COUNT(*) FROM confirmations WHERE sid=?";
+			String sqlPP = "SELECT COUNT(*) FROM plannedparticipants WHERE aid=?";
 			PreparedStatement psSugg = connection.prepareStatement(sqlSugg);
 			psSugg.setInt(1, aid);
 			ResultSet rsSugg = psSugg.executeQuery();
 			while(rsSugg.next()) {
 				try {
+					//Gather all suggestions
 					PreparedStatement psConf = connection.prepareStatement(sqlConf);
 					psConf.setInt(1, rsSugg.getInt("sid")); //get suggestionID and set it to sql request
 					ResultSet rsConf = psConf.executeQuery();
@@ -383,17 +386,21 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 						result.add(new Suggestion(rsSugg.getInt("sid"), rsSugg.getInt("uid"), rsSugg.getInt("aid"),
 								rsSugg.getTimestamp("startTime"), rsSugg.getTimestamp("endTime"), confirmationCount));
 					}
+					//Get absolute count of appointmentParticipantCount and add to gathered suggestions
+					PreparedStatement psPP = connection.prepareStatement(sqlPP);
+					psPP.setInt(1, aid); //get suggestionID and set it to sql request
+					ResultSet rsPP = psPP.executeQuery();
+					while(rsPP.next()) {
+						int requiredConfirmationCount = rsPP.getInt(1);
+						for(Suggestion s : result) {
+							s.setRequiredConfirmations(requiredConfirmationCount);
+						}
+					}
 				}catch(Exception e) {
 					System.out.println("DBFACADE: FETCHSUGGESTIONS: FAILED AT BLOCK2");
 					e.printStackTrace();
 					return null;
 				}
-				
-			}
-			int requiredConfirmationCount = result.size();
-			System.out.println("FETCHED SUGGESTIONS; CONFIRMATIONS. TOTAL CONFIRMATIONCOUNT: " + requiredConfirmationCount);
-			for(Suggestion s : result) {
-				s.setRequiredConfirmations(requiredConfirmationCount);
 			}
 			return result;
 		}catch(Exception e) {
@@ -430,5 +437,9 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	public void finalizeAppointment() {
+		
 	}
 }

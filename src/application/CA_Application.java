@@ -70,6 +70,11 @@ public class CA_Application implements CmCmds {
 		DBFacade dbFacade = DBFacade.getInstance();
 		return dbFacade.fetchUnfinalizedAppointments(cid);
 	}
+	
+	public void checkFinalization() {
+		DBFacade dbFacade = DBFacade.getInstance();
+		dbFacade.finalizeAppointment();
+	}
 
 
 

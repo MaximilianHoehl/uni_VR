@@ -118,9 +118,9 @@ public class AppointmentServlet extends HttpServlet {
 				int userID = Debugging.getCurrentUser();
 				
 				if(ca.suggestingDate(userID, clickedAppointmentID, startTime, endTime)) {
-					request.setAttribute("success", 1);
+					request.setAttribute("success", 1); //TRUE
 				}else {
-					request.setAttribute("success", 0);
+					request.setAttribute("success", 0); //FALSE
 				}
 				try {
 					request.setAttribute("pagetitle", "Welcome");

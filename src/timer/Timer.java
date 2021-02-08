@@ -1,5 +1,7 @@
 package timer;
 
+import application.CA_Application;
+
 //import application.VRApplication;
 
 /**
@@ -14,7 +16,7 @@ public class Timer {
 	public static void main(String[] args) {
 		//VRApplication vrApp = new VRApplication();
 		//vrApp.checkPayment();
-		System.out
-				.println("All bookings not paid and older than 14 days are successfully deleted");
+		CA_Application ca = CA_Application.createInstance();
+		
 	}
 }
