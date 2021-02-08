@@ -14,8 +14,7 @@ import application.CA_Application;
 public class Timer {
 
 	public static void main(String[] args) {
-		//VRApplication vrApp = new VRApplication();
-		//vrApp.checkPayment();
+		
 		CA_Application ca = CA_Application.createInstance();
 		
 	}

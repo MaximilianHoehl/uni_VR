@@ -440,6 +440,28 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 	}
 	
 	public void finalizeAppointment() {
+		String sqlGetAllIds = "SELECT id FROM appointments";
+		String sqlTryFinalize = "Update appointments a SET finalized ="
+				+ " CASE WHEN a.id=?"
+				+ " AND ((SELECT MAX(confNum)"
+				+ " FROM (SELECT c.sid, COUNT(*) as confNum FROM confirmations c WHERE c.aid=? GROUP BY c.sid) as confnums)"
+				+ " >= (SELECT COUNT(*) FROM plannedparticipants p WHERE p.aid=?))"
+				+ " THEN true ELSE a.finalized END";
+		try (Connection connection = createDBConnection()) {
+			PreparedStatement psGA = connection.prepareStatement(sqlGetAllIds);
+			ResultSet rsGA = psGA.executeQuery();
+			System.out.println("--- AutoFianlization: Fetched Appointment IDs");
+			while(rsGA.next()) {
+				PreparedStatement psTF = connection.prepareStatement(sqlTryFinalize);
+				psTF.setInt(1, rsGA.getInt(1));
+				psTF.setInt(2, rsGA.getInt(1));
+				psTF.setInt(3, rsGA.getInt(1));
+				psTF.executeUpdate();
+				System.out.println("--- AutoFianlization: Checked Finalization on ID");
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 }

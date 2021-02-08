@@ -77,6 +77,7 @@ public class AppointmentServlet extends HttpServlet {
 				int aid = selectedSuggestion.getAid();
 				if(ca.selectingDate(uid, sid, aid)) {
 					request.setAttribute("success", 1);
+					ca.checkFinalization();
 				}else {
 					request.setAttribute("success", 0);
 				}
