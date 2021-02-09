@@ -72,7 +72,6 @@ public class DefaultGUITest {
 			tester.setTextField("endTime", "12:12:12");
 			tester.setTextField("deadline", "06:24:2021");
 
-
 			tester.clickButton("btn_createAppointment");
 
 			// Check the representation of the table for an empty result
