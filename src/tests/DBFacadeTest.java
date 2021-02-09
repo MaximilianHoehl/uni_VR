@@ -245,16 +245,16 @@ class DBFacadeTest extends TestCase {
 						pp);
 			}
 			
-			//Give one appointment all required confirmations
+			//Give 1 of the future appointments all required confirmations (past-appointments get finalized anyway)
 			String sql = "INSERT INTO confirmations (uid, sid, aid) VALUES (?,?,?)";
 			PreparedStatement ps1 = connection.prepareStatement(sql);
 			ps1.setInt(1, 1);
 			ps1.setInt(2, 1);
-			ps1.setInt(3, 1);
+			ps1.setInt(3, 4); //3+1 since one appointment already exists 
 			PreparedStatement ps2 = connection.prepareStatement(sql);
 			ps2.setInt(1, 2);
 			ps2.setInt(2, 1);
-			ps2.setInt(3, 1);
+			ps2.setInt(3, 4);
 			ps1.executeUpdate();
 			ps2.executeUpdate();
 			
@@ -267,7 +267,7 @@ class DBFacadeTest extends TestCase {
 			PreparedStatement ps = connection.prepareStatement(sqlFetchRes);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
-				results.add(rs.getBoolean("finalized"));
+				results.add(rs.getInt("finalized")==1);
 			}
 			
 			//Validate
@@ -275,8 +275,10 @@ class DBFacadeTest extends TestCase {
 			for(Boolean b : results) {
 				System.out.println(b);
 			}
-			assertTrue(results.get(0));
 			assertTrue(results.get(1));
+			assertTrue(results.get(2));
+			assertTrue(results.get(3));
+			assertFalse(results.get(4));
 			
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -292,10 +294,10 @@ class DBFacadeTest extends TestCase {
 			+ Configuration.getPort() + "/" + Configuration.getDatabase(),
 			Configuration.getUser(), Configuration.getPassword());
 			
-			String resetAppointments = "DELETE FROM appointments"; //Existing groupcalendar in DB is assumed since its not part of the task 
-			String resetConfirmations = "DELETE FROM confirmations";
-			String resetSuggestions = "DELETE FROM suggestions";
-			String resetPlannedParticipants = "DELETE FROM plannedparticipants";
+			String resetAppointments = "TRUNCATE TABLE appointments"; //Existing groupcalendar in DB is assumed since its not part of the task 
+			String resetConfirmations = "TRUNCATE TABLE confirmations";
+			String resetSuggestions = "TRUNCATE TABLE suggestions";
+			String resetPlannedParticipants = "TRUNCATE TABLE plannedparticipants";
 			PreparedStatement ps_rA = connection.prepareStatement(resetAppointments);
 			PreparedStatement ps_rC = connection.prepareStatement(resetConfirmations);
 			PreparedStatement ps_rS = connection.prepareStatement(resetSuggestions);
