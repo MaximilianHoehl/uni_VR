@@ -30,8 +30,7 @@ public class Appointment {
 		this.setFinalized(false);
 	}
 	public Appointment (String name, LocationData location, TimeData startTime, TimeData endTime, 
-			String description, TimeData deadline, int id, int cid, Boolean finalized, String suggestions, 
-			String plannedParticipants, String confirmations) {
+			String description, TimeData deadline, int id, int cid, Boolean finalized) {
 		
 		this.name = name;
 		this.location = location;
@@ -42,14 +41,10 @@ public class Appointment {
 		this.id = id;
 		this.cid = cid;
 		this.setFinalized(finalized);
-		this.suggestions = suggestions;
-		this.plannedParticipants = plannedParticipants;
-		this.confirmations = confirmations;
 	}
 	//Constructor for getting not-finalized appointments (->selectAWebPage suggestion/selection)
 	public Appointment(int res_id, int res_cid, String res_name, String res_description, LocationData res_location,
-			TimeData res_startTime, TimeData res_endTime, TimeData res_deadline, Boolean res_finalized,
-			String res_suggestions, String res_plannedParticipants, String res_Confirmations) {
+			TimeData res_startTime, TimeData res_endTime, TimeData res_deadline, Boolean res_finalized) {
 		this.name = res_name;
 		this.location = res_location;
 		this.startTime = res_startTime;
@@ -59,9 +54,6 @@ public class Appointment {
 		this.id = res_id;
 		this.cid = res_cid;
 		this.setFinalized(res_finalized);
-		this.suggestions = res_suggestions;
-		this.plannedParticipants = res_plannedParticipants;
-		this.confirmations = res_Confirmations;
 	}
 	public String getName() {
 		return name;

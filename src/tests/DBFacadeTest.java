@@ -69,30 +69,8 @@ class DBFacadeTest extends TestCase {
 			e.printStackTrace();
 		}
 	}
-	
-	@AfterEach
-	protected
-	void tearDown() throws Exception {
-		try {
-			
-			Connection connection = DriverManager.getConnection(
-			"jdbc:" + Configuration.getType() + "://" + Configuration.getServer() + ":"
-			+ Configuration.getPort() + "/" + Configuration.getDatabase(),
-			Configuration.getUser(), Configuration.getPassword());
-			
-			String reset = "DELETE FROM appointments"; //Existing groupcalendar in DB is assumed since its not part of the task 
-			PreparedStatement ps_reset = connection.prepareStatement(reset);
-			ps_reset.executeUpdate();
-			System.out.println("SETUP: successfully executed RESET Query");
-		}catch (Exception e) {
-			
-			e.printStackTrace();
-		}
-		
-	}
-	
 	@Test
-	void testAddAppointment() {		//Setup with problemspecific values
+	void test_AddAppointment() {		//Setup with problemspecific values
 		System.out.println("START TEST: addAppointment");
 		
 		//first get dbconnection to be able to test if function stored everything well
@@ -111,10 +89,11 @@ class DBFacadeTest extends TestCase {
 			TimeData startTime = new TimeData(Timestamp.valueOf("2022-02-01 00:00:00"));
 			TimeData endTime = new TimeData(Timestamp.valueOf("2022-02-02 00:00:00"));
 			TimeData deadline = new TimeData(Timestamp.valueOf("2022-01-02 00:00:00"));
+			String[] pp = {"1", "2"};
 			
 			//Execute the function 
 			DBFacade fixture = DBFacade.getInstance();
-			Boolean success = fixture.addAppointment(cid, name, desc, locationString, deadline, startTime, endTime);
+			Boolean success = fixture.addAppointment(cid, name, desc, locationString, deadline, startTime, endTime, pp);
 			System.out.println("TestAddAppointment: executed method");
 			//Test if there are no technical errors
 			assertTrue(success);
@@ -154,12 +133,10 @@ class DBFacadeTest extends TestCase {
 		
 	}
 	@Test
-	protected void testFetchCalendarInfos() throws ParseException {
+	protected void test_FetchCalendarInfos() throws ParseException {
 		
 		System.out.println("START TEST: FetchCalendarInfos");
-		
 		DBFacade fixture = DBFacade.getInstance();
-		
 		GroupCalendar result = fixture.fetchCalendarInfos(1, null, null, null, null);
 		
 		//Check if anything returned
@@ -170,6 +147,99 @@ class DBFacadeTest extends TestCase {
 		assertEquals(result.getName(), "Calendar 1");
 		assertEquals(result.getDescription(), "Kalender der Gruppe 1");
 		assertTrue(result.getAppointments() instanceof ArrayList);
+		
+	}
+	@Test
+	protected void test_SetChosenDate() {
+		try (Connection connection = DriverManager.getConnection(
+				"jdbc:" + Configuration.getType() + "://" + Configuration.getServer() + ":"
+						+ Configuration.getPort() + "/" + Configuration.getDatabase(),
+						Configuration.getUser(), Configuration.getPassword())) {
+			
+			//Ausführen der Methode
+			System.out.println("START TEST: SetChrosenDate");
+			DBFacade fixture = DBFacade.getInstance();
+			fixture.setChosenDate(1, 1, 1);
+			fixture.setChosenDate(1, 1, 1); //execute twice so we can check if first gets deleted
+			
+			//Ergebnisse aus DB holen
+			int confirmNum = 0;
+			String sqlFetchResults = "SELECT COUNT(*) FROM confirmations c WHERE (c.uid=1 AND c.sid=1 AND c.aid=1)";
+			PreparedStatement ps = connection.prepareStatement(sqlFetchResults);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				confirmNum = rs.getInt(1);
+			}
+			
+			//Validation
+			assertTrue(confirmNum == 1);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+	@Test
+	protected void test_saveSuggestion() {
+		try (Connection connection = DriverManager.getConnection(
+				"jdbc:" + Configuration.getType() + "://" + Configuration.getServer() + ":"
+						+ Configuration.getPort() + "/" + Configuration.getDatabase(),
+						Configuration.getUser(), Configuration.getPassword())) {
+			
+			//Prepare inputdata
+			int uid = 1;
+			int aid = 1;
+			TimeData startTime = new TimeData(2000, 1, 1, 0, 0, 0);
+			TimeData endTime = new TimeData(2001, 1, 1, 0, 0, 0);
+			
+			//setup and rum method
+			DBFacade fixture = DBFacade.getInstance();
+			fixture.saveSuggestion(uid, aid, startTime, endTime);
+			
+			//fetch results
+			int resCount = 0;
+			String sqlResult = "SELECT COUNT(*) FROM suggestions WHERE uid=1 AND aid=1";
+			PreparedStatement ps = connection.prepareStatement(sqlResult);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				resCount = rs.getInt(1);
+			}
+			
+			//Validation
+			assertTrue(resCount == 1);
+		}catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+	}
+	@AfterEach
+	protected
+	void tearDown() throws Exception {
+		try {
+			
+			Connection connection = DriverManager.getConnection(
+			"jdbc:" + Configuration.getType() + "://" + Configuration.getServer() + ":"
+			+ Configuration.getPort() + "/" + Configuration.getDatabase(),
+			Configuration.getUser(), Configuration.getPassword());
+			
+			String resetAppointments = "DELETE FROM appointments"; //Existing groupcalendar in DB is assumed since its not part of the task 
+			String resetConfirmations = "DELETE FROM confirmations";
+			String resetSuggestions = "DELETE FROM suggestions";
+			String resetPlannedParticipants = "DELETE FROM plannedparticipants";
+			PreparedStatement ps_rA = connection.prepareStatement(resetAppointments);
+			PreparedStatement ps_rC = connection.prepareStatement(resetConfirmations);
+			PreparedStatement ps_rS = connection.prepareStatement(resetSuggestions);
+			PreparedStatement ps_rP = connection.prepareStatement(resetPlannedParticipants);
+			ps_rA.executeUpdate();
+			ps_rC.executeUpdate();
+			ps_rS.executeUpdate();
+			ps_rP.executeUpdate();
+			System.out.println("SETUP: successfully executed RESET Opterations");
+		}catch (Exception e) {
+			
+			e.printStackTrace();
+		}
 		
 	}
 

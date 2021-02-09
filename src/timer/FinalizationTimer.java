@@ -1,5 +1,8 @@
 package timer;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import application.CA_Application;
 
 //import application.VRApplication;
@@ -11,11 +14,20 @@ import application.CA_Application;
  * @author swe.uni-due.de
  *
  */
-public class Timer {
+public class FinalizationTimer {
 
 	public static void main(String[] args) {
 		
 		CA_Application ca = CA_Application.createInstance();
 		
+		TimerTask ts = new TimerTask() {
+			
+			public void run() {
+				System.out.println("CheckFinalization");
+				ca.checkFinalization();
+			}
+		};
+		Timer timer = new Timer();
+		timer.schedule(ts, 1000, 2500);
 	}
 }

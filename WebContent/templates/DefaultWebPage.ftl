@@ -9,6 +9,8 @@
 		<option value="1">User1</option>
 		<option value="2">User2</option>
 		<option value="3">User3</option>
+		<option value="4">User4</option>
+		<option value="5">User5</option>
 	</select>
 	<button type="submit" id="" name="" value="Submit">Show Calendar</button>
 </form>
@@ -21,6 +23,8 @@
 		<option value="1">User1</option>
 		<option value="2">User2</option>
 		<option value="3">User3</option>
+		<option value="4">User4</option>
+		<option value="5">User5</option>
 	</select>
 	<fieldset id="createAppointment">
 		
@@ -81,6 +85,8 @@
 		<option value="1">User1</option>
 		<option value="2">User2</option>
 		<option value="3">User3</option>
+		<option value="4">User4</option>
+		<option value="5">User5</option>
 	</select>
 	<button type="submit" id="" name="selectAWebPage" value="Submit">Pending Requests</button>
 </form>

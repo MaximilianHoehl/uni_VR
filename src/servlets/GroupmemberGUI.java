@@ -97,7 +97,7 @@ public class GroupmemberGUI extends HttpServlet{
 														Integer.valueOf(deadLine[5]));
 					
 					//Make appointment request and store returned success-bool in varable
-					Boolean success = app.makeAppointmentRequest(1, name, description, location, deadline, startTime, endTime, pp, "testSuggestions", "testPlannedParticipants", "testConfirmations");
+					Boolean success = app.makeAppointmentRequest(1, name, description, location, deadline, startTime, endTime, pp);
 					
 					//Send response-webpage based on returned success-boolean
 					if(success){

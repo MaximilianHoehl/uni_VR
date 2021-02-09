@@ -116,7 +116,7 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 
 	@Override
 	public Boolean addAppointment(int cid, String name, String description, LocationData location,
-			TimeData deadline, TimeData startTime, TimeData endTime, String[] pp, String suggestions, String PlannedParticipants, String confirmations) {
+			TimeData deadline, TimeData startTime, TimeData endTime, String[] pp) {
 		
 		//check if requested Appointment overlaps
 		String sqlSelectOverlap = "SELECT COUNT(*) FROM appointments a"
@@ -143,8 +143,8 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 							System.out.println(rs.getInt("count(*)")==0);
 							
 							String sqlInsertA = "INSERT INTO appointments"
-									+ " (cid, name, description, location, startTime, endTime, deadline, finalized, Suggestions, PlannedParticipants, Confirmations)"
-									+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+									+ " (cid, name, description, location, startTime, endTime, deadline, finalized)"
+									+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 							String sqlInsertSugg = "INSERT INTO suggestions(uid, aid, startTime, endTime) VALUES (?, ?, ?, ?)";
 							try(PreparedStatement psI = connection.prepareStatement(sqlInsertA)){
 								psI.setInt(1, cid);
@@ -155,9 +155,6 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 								psI.setTimestamp(6, endTime.getTimestamp());
 								psI.setTimestamp(7, deadline.getTimestamp());
 								psI.setBoolean(8, false);
-								psI.setString(9, suggestions);
-								psI.setString(10, PlannedParticipants);
-								psI.setString(11, confirmations);
 								try{
 									psI.executeUpdate();
 									try(PreparedStatement psS = connection.prepareStatement(sqlInsertSugg)){
@@ -230,10 +227,7 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 				TimeData res_endTime = new TimeData(rs.getTimestamp(7));
 				TimeData res_deadline = new TimeData(rs.getTimestamp(8));
 				Boolean res_finalized = rs.getBoolean(9);
-				String res_suggestions = rs.getString(10);
-				String res_plannedParticipants = rs.getString(11);
-				String res_Confirmations = rs.getString(12);
-				result = new Appointment(res_id, res_cid, res_name, res_description, res_location, res_startTime, res_endTime, res_deadline, res_finalized, res_suggestions, res_plannedParticipants, res_Confirmations);
+				result = new Appointment(res_id, res_cid, res_name, res_description, res_location, res_startTime, res_endTime, res_deadline, res_finalized);
 				return result;
 			}
 		}catch(Exception e) {
@@ -428,10 +422,7 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 				TimeData res_endTime = new TimeData(rs.getTimestamp(7));
 				TimeData res_deadline = new TimeData(rs.getTimestamp(8));
 				Boolean res_finalized = rs.getBoolean(9);
-				String res_suggestions = rs.getString(10);
-				String res_plannedParticipants = rs.getString(11);
-				String res_Confirmations = rs.getString(12);
-				result.add(new Appointment(res_id, res_cid, res_name, res_description, res_location, res_startTime, res_endTime, res_deadline, res_finalized, res_suggestions, res_plannedParticipants, res_Confirmations));
+				result.add(new Appointment(res_id, res_cid, res_name, res_description, res_location, res_startTime, res_endTime, res_deadline, res_finalized));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
