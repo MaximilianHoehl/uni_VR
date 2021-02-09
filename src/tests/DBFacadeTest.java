@@ -70,7 +70,7 @@ class DBFacadeTest extends TestCase {
 		}
 	}
 	@Test
-	void test_AddAppointment() {		//Setup with problemspecific values
+	void test_addAppointment() {		//Setup with problemspecific values
 		System.out.println("START TEST: addAppointment");
 		
 		//first get dbconnection to be able to test if function stored everything well
@@ -99,14 +99,20 @@ class DBFacadeTest extends TestCase {
 			assertTrue(success);
 			
 			//Test of exaclty one value was stored in DB
-			String sqlCountContent = "SELECT COUNT(*) FROM appointments";
-			PreparedStatement ps_CountContent = connection.prepareStatement(sqlCountContent);
-			ResultSet rs = ps_CountContent.executeQuery();
+			String sqlCountApp = "SELECT COUNT(*) FROM appointments";
+			String sqlCountSugg = "SELECT COUNT(*) FROM suggestions";
+			PreparedStatement ps_CountApp = connection.prepareStatement(sqlCountApp);
+			ResultSet rs = ps_CountApp.executeQuery();
 			while(rs.next()) {
-				int fetchedDBContentCount = rs.getInt("count(*)");
-				assertTrue(fetchedDBContentCount == 2); //We already add one item in setup() to test the testFetchCalendarInfos method later on
+				int fetchedAppointmentCount = rs.getInt("count(*)");
+				assertTrue(fetchedAppointmentCount == 2); //We already add one item in setup() to test the testFetchCalendarInfos method later on
 			}
-			
+			PreparedStatement ps_CountSugg = connection.prepareStatement(sqlCountSugg);
+			ResultSet rsS = ps_CountSugg.executeQuery();
+			while(rsS.next()) {
+				int fetchedSuggestionCount = rsS.getInt("count(*)");
+				assertTrue(fetchedSuggestionCount == 1); //We only added 1 appointment over the addAppointment method
+			}
 			
 			//Test if the data was correctly stored in db
 			String sqlSelect = "SELECT * FROM appointments";
@@ -186,7 +192,7 @@ class DBFacadeTest extends TestCase {
 						+ Configuration.getPort() + "/" + Configuration.getDatabase(),
 						Configuration.getUser(), Configuration.getPassword())) {
 			
-			//Prepare inputdata
+			//Prepare input-data
 			int uid = 1;
 			int aid = 1;
 			TimeData startTime = new TimeData(2000, 1, 1, 0, 0, 0);
@@ -212,6 +218,69 @@ class DBFacadeTest extends TestCase {
 			e.printStackTrace();
 		}
 		
+	}
+	@Test 
+	protected void test_finalizeAppointment() {
+		try (Connection connection = DriverManager.getConnection(
+				"jdbc:" + Configuration.getType() + "://" + Configuration.getServer() + ":"
+						+ Configuration.getPort() + "/" + Configuration.getDatabase(),
+						Configuration.getUser(), Configuration.getPassword())) {
+			
+			DBFacade fixture = DBFacade.getInstance();
+			String[] pp = {"1", "2"};
+			for(int i=0; i<2; i++) { //Create 2 appointments for past-case-testing
+				fixture.addAppointment(1, "TestFinalization", "TestFinalization",
+						new LocationData("testStreet 4444 testTown testCountry"),
+						new TimeData(2000 + i, 1, 2, 0, 0, 0),
+						new TimeData(2001 + i, 1, 2, 0, 0, 0),
+						new TimeData(2000 + i, 1, 1, 0, 0, 0),
+						pp);
+			}
+			for(int i=0; i<2; i++) { //Create 2 appointments for future-case-testing
+				fixture.addAppointment(1, "TestFinalization", "TestFinalization",
+						new LocationData("testStreet 4444 testTown testCountry"),
+						new TimeData(2030 + i, 1, 2, 0, 0, 0),
+						new TimeData(2031 + i, 1, 2, 0, 0, 0),
+						new TimeData(2030 + i, 1, 1, 0, 0, 0),
+						pp);
+			}
+			
+			//Give one appointment all required confirmations
+			String sql = "INSERT INTO confirmations (uid, sid, aid) VALUES (?,?,?)";
+			PreparedStatement ps1 = connection.prepareStatement(sql);
+			ps1.setInt(1, 1);
+			ps1.setInt(2, 1);
+			ps1.setInt(3, 1);
+			PreparedStatement ps2 = connection.prepareStatement(sql);
+			ps2.setInt(1, 2);
+			ps2.setInt(2, 1);
+			ps2.setInt(3, 1);
+			ps1.executeUpdate();
+			ps2.executeUpdate();
+			
+			//run method
+			fixture.finalizeAppointment();
+			
+			//Fetch results
+			String sqlFetchRes = "SELECT * FROM appointments";
+			ArrayList<Boolean> results = new ArrayList<Boolean>();
+			PreparedStatement ps = connection.prepareStatement(sqlFetchRes);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				results.add(rs.getBoolean("finalized"));
+			}
+			
+			//Validate
+			System.out.println("Results of finalize appointment query: ");
+			for(Boolean b : results) {
+				System.out.println(b);
+			}
+			assertTrue(results.get(0));
+			assertTrue(results.get(1));
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	@AfterEach
 	protected

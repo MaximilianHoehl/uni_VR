@@ -431,28 +431,58 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 	}
 	
 	public void finalizeAppointment() {
-		String sqlGetAllIds = "SELECT id FROM appointments";
-		String sqlTryFinalize = "Update appointments a SET finalized ="
+		String sqlGetCurrentState = "SELECT id, finalized FROM appointments";
+		String sqlFinalizeConfirmed = "Update appointments a SET finalized ="
 				+ " CASE WHEN a.id=?"
 				+ " AND ((SELECT MAX(confNum)"
 				+ " FROM (SELECT c.sid, COUNT(*) as confNum FROM confirmations c WHERE c.aid=? GROUP BY c.sid) as confnums)"
 				+ " >= (SELECT COUNT(*) FROM plannedparticipants p WHERE p.aid=?))"
 				+ " THEN true ELSE a.finalized END";
+		String sqlFinalizePast = "UPDATE appointments SET finalized = true "
+				+ "WHERE (finalized = false AND (TIMESTAMP(deadline) < CURRENT_TIMESTAMP))";
+		ArrayList<Integer> snapShotIDs = new ArrayList<Integer>();
+		ArrayList<Boolean> snapShotFinalizeStatus = new ArrayList<Boolean>();
 		try (Connection connection = createDBConnection()) {
-			PreparedStatement psGA = connection.prepareStatement(sqlGetAllIds);
+			//Finalize all confirmed
+			PreparedStatement psGA = connection.prepareStatement(sqlGetCurrentState);
 			ResultSet rsGA = psGA.executeQuery();
-			System.out.println("--- AutoFianlization: Fetched Appointment IDs");
+			System.out.println("--- AutoFianlization: Fetched Appointment IDs+FinalizeStatus");
 			while(rsGA.next()) {
-				PreparedStatement psTF = connection.prepareStatement(sqlTryFinalize);
+				snapShotIDs.add(rsGA.getInt(1));
+				snapShotFinalizeStatus.add(rsGA.getInt(2)==1);
+				
+				PreparedStatement psTF = connection.prepareStatement(sqlFinalizeConfirmed);
 				psTF.setInt(1, rsGA.getInt(1));
 				psTF.setInt(2, rsGA.getInt(1));
 				psTF.setInt(3, rsGA.getInt(1));
 				psTF.executeUpdate();
 				System.out.println("--- AutoFianlization: Checked Finalization on ID");
 			}
+			//Finalize all past
+			PreparedStatement psFP = connection.prepareStatement(sqlFinalizePast);
+			psFP.executeUpdate();
+			
+			//Fetch new state and compare with snapShot
+			ArrayList<Integer> idsOfCangedStates = new ArrayList<Integer>();
+			PreparedStatement ps = connection.prepareStatement(sqlGetCurrentState);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				if(snapShotFinalizeStatus.get(snapShotIDs.indexOf(rs.getInt(1))) != (rs.getInt(2)==1)){
+					idsOfCangedStates.add(rs.getInt(1));
+				}
+			}
+			for(int id : idsOfCangedStates) {
+				
+			}
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		
+	}
+	private void setFinalDateDecision(int aid) {
+		
+		String sqlSidOfhighesConfirmation = "SELECT c.sid, COUNT(*) as confNum FROM confirmations c WHERE aid=? GROUP BY c.sid ORDER BY confNum ASC";
+		String sqlDateOfhighesConfirmation = "SELECT startTime, endTime FROM suggestions WHERE sid=?";
 	}
 }
