@@ -472,7 +472,11 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 				}
 			}
 			for(int id : idsOfCangedStates) {
-				
+				if(setFinalDateDecision(id, connection)) {
+					System.out.println("Everything went well");
+				}else {
+					System.out.println("Something went wrong");
+				}
 			}
 			
 		}catch (Exception e) {
@@ -480,9 +484,31 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 		}
 		
 	}
-	private void setFinalDateDecision(int aid) {
+	private boolean setFinalDateDecision(int aid, Connection connection) throws SQLException {
 		
-		String sqlSidOfhighesConfirmation = "SELECT c.sid, COUNT(*) as confNum FROM confirmations c WHERE aid=? GROUP BY c.sid ORDER BY confNum ASC";
+		
+		String sqlSidOfhighesConfirmation = "SELECT c.sid, COUNT(*) as confNum FROM confirmations c WHERE aid=? GROUP BY c.sid ORDER BY confNum DESC";
 		String sqlDateOfhighesConfirmation = "SELECT startTime, endTime FROM suggestions WHERE sid=?";
+		String sqlSetFinalDateDecision = "UPDATE appointments a SET a.startTime=?, a.endTime=? WHERE a.id=?";
+		
+		PreparedStatement psSid = connection.prepareStatement(sqlSidOfhighesConfirmation);
+		psSid.setInt(1, aid);
+		ResultSet resSid = psSid.executeQuery();
+		while(resSid.next()) {
+			int sid = resSid.getInt(1);
+			PreparedStatement psDate = connection.prepareStatement(sqlDateOfhighesConfirmation);
+			psDate.setInt(1, sid);
+			ResultSet resDate = psDate.executeQuery();
+			while(resDate.next()) {
+				PreparedStatement psFin = connection.prepareStatement(sqlSetFinalDateDecision);
+				psFin.setTimestamp(1, resDate.getTimestamp(1));
+				psFin.setTimestamp(2, resDate.getTimestamp(2));
+				psFin.setInt(3, aid);
+				psFin.executeUpdate();
+				return true;
+			}
+			break;
+		}
+		return false;
 	}
 }
