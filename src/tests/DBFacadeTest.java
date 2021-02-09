@@ -38,9 +38,20 @@ class DBFacadeTest extends TestCase {
 			System.out.println("SETUP: DB successfully connected");
 			//Reset Tablecontent and add one single item for testing
 			try {
-				String reset = "DELETE FROM appointments"; //Existing groupcalendar in DB is assumed since its not part of the task 
-				PreparedStatement ps_reset = connection.prepareStatement(reset);
-				ps_reset.executeUpdate();
+				//Existing groupcalendar in DB is assumed since its not part of the task 
+				String resetAppointments = "TRUNCATE TABLE appointments";
+				String resetConfirmations = "TRUNCATE TABLE confirmations";
+				String resetSuggestions = "TRUNCATE TABLE suggestions";
+				String resetPlannedParticipants = "TRUNCATE TABLE plannedparticipants";
+				PreparedStatement ps_A = connection.prepareStatement(resetAppointments);
+				PreparedStatement ps_rC = connection.prepareStatement(resetConfirmations);
+				PreparedStatement ps_rS = connection.prepareStatement(resetSuggestions);
+				PreparedStatement ps_rP = connection.prepareStatement(resetPlannedParticipants);
+				ps_A.executeUpdate();
+				ps_rC.executeUpdate();
+				ps_rS.executeUpdate();
+				ps_rP.executeUpdate();
+				
 				System.out.println("SETUP: successfully executed RESET Query");
 				
 				//Add one single entry to test the fetchCalendarInfo method. Will be ignored in testAddAppointment
