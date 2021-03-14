@@ -2,9 +2,15 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
 
+import dbadapter.Configuration;
 import net.sourceforge.jwebunit.junit.WebTester;
 
 public class DefaultGUITest {
@@ -72,13 +78,48 @@ public class DefaultGUITest {
 			tester.setTextField("endTime", "12:12:12");
 			tester.setTextField("deadline", "06:24:2021");
 
-			tester.clickButton("btn_createAppointment");
+			tester.clickButton("btn_showCalendar");
+			
+			tester.assertTablePresent("Calendar");
+			String[] tableHeadings = { "#", "Name", "Description", "Location", "Start Time", "End Time" };
+			tester.assertTextInTable("Calendar", tableHeadings);
+			tester.assertButtonPresent("btn_backToMain");
+			tester.clickButton("btn_backToMain");
+			
+			tester.assertButtonPresent("btn_createAppointment");
 
-			// Check the representation of the table for an empty result
-			//tester.assertTablePresent("Calendar1");
-			//String[][] tableHeadings = { { "cid", "Name", "Description", "Appointment" } };
-			//tester.assertTableEquals("Calendar1", tableHeadings);
+			
 		
+		}
+		
+		@AfterEach
+		protected
+		void tearDown() throws Exception {
+			try {
+				
+				Connection connection = DriverManager.getConnection(
+				"jdbc:" + Configuration.getType() + "://" + Configuration.getServer() + ":"
+				+ Configuration.getPort() + "/" + Configuration.getDatabase(),
+				Configuration.getUser(), Configuration.getPassword());
+				
+				String resetAppointments = "TRUNCATE TABLE appointments"; //Existing groupcalendar in DB is assumed since its not part of the task 
+				String resetConfirmations = "TRUNCATE TABLE confirmations";
+				String resetSuggestions = "TRUNCATE TABLE suggestions";
+				String resetPlannedParticipants = "TRUNCATE TABLE plannedparticipants";
+				PreparedStatement ps_rA = connection.prepareStatement(resetAppointments);
+				PreparedStatement ps_rC = connection.prepareStatement(resetConfirmations);
+				PreparedStatement ps_rS = connection.prepareStatement(resetSuggestions);
+				PreparedStatement ps_rP = connection.prepareStatement(resetPlannedParticipants);
+				ps_rA.executeUpdate();
+				ps_rC.executeUpdate();
+				ps_rS.executeUpdate();
+				ps_rP.executeUpdate();
+				System.out.println("SETUP: successfully executed RESET Opterations");
+			}catch (Exception e) {
+				
+				e.printStackTrace();
+			}
+			
 		}
 	}
 

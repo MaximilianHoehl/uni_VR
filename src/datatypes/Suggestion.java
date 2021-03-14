@@ -9,7 +9,7 @@ public class Suggestion {
 	private int aid;
 	private Timestamp startTime;
 	private Timestamp endTime;
-	private int confirmations;
+	private int confirmationNum;
 	private int requiredConfirmations;
 	
 	public Suggestion() {
@@ -23,7 +23,7 @@ public class Suggestion {
 		this.setAid(aid);
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.confirmations = confirmations;
+		this.confirmationNum = confirmations;
 	}
 
 	public int getId() {
@@ -47,7 +47,7 @@ public class Suggestion {
 	}
 
 	public void setConfirmations(int confirmations) {
-		this.confirmations = confirmations;
+		this.confirmationNum = confirmations;
 	}
 
 	public Timestamp getEndTime() {
@@ -55,7 +55,7 @@ public class Suggestion {
 	}
 
 	public int getConfirmations() {
-		return confirmations;
+		return confirmationNum;
 	}
 
 	public int getRequiredConfirmations() {

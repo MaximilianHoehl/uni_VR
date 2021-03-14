@@ -2,13 +2,13 @@ package datatypes;
 
 public class AppointmentData {
 	
+	private int id;
 	private String name;
 	private LocationData location;
 	private TimeData startTime;
 	private TimeData endTime;
 	private String description;
 	private TimeData deadline;
-	private int id;
 	private Boolean finalized;
 	
 	public AppointmentData (int id, String name,  String description, LocationData location, TimeData startTime, TimeData endTime, TimeData deadline, Boolean finalized) {

@@ -11,9 +11,6 @@ public class Appointment {
 	private TimeData endTime;
 	private TimeData deadline;
 	private Boolean finalized;
-	private String suggestions;
-	private String plannedParticipants;
-	private String confirmations;
 	
 	
 	public Appointment (String name, LocationData location, TimeData startTime, TimeData endTime, 
@@ -91,15 +88,6 @@ public class Appointment {
 	}
 	public void setFinalized(Boolean finalized) {
 		this.finalized = finalized;
-	}
-	public String getSuggestions() {
-		return suggestions;
-	}
-	public String getPlannedParticipants() {
-		return plannedParticipants;
-	}
-	public String getConfirmations() {
-		return confirmations;
 	}
 	
 }

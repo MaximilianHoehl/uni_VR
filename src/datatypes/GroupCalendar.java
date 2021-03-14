@@ -7,7 +7,7 @@ public class GroupCalendar {
 	private int cid;
 	private String name;
 	private String description;
-	private ArrayList<AppointmentData> Appointments;
+	private ArrayList<AppointmentData> appointmentList;
 	private int groupID = cid;
 	
 	public GroupCalendar( int cid, String name, String description, ArrayList<AppointmentData> Appointments) {
@@ -16,7 +16,7 @@ public class GroupCalendar {
 		this.groupID = cid;
 		this.name = name;
 		this.description = description;
-		this.Appointments = Appointments;
+		this.appointmentList = Appointments;
 	}
 
 	public String getName() {
@@ -28,7 +28,7 @@ public class GroupCalendar {
 	}
 
 	public ArrayList<AppointmentData> getAppointments() {
-		return Appointments;
+		return appointmentList;
 	}
 
 	public int getGroupID() {

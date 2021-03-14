@@ -23,7 +23,6 @@ public class FinalizationTimer {
 		TimerTask ts = new TimerTask() {
 			
 			public void run() {
-				System.out.println("CheckFinalization");
 				ca.checkFinalization();
 			}
 		};

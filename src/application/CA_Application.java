@@ -10,10 +10,10 @@ import datatypes.LocationData;
 import datatypes.Suggestion;
 import datatypes.TimeData;
 import interfaces.CmCmds;
-
+import interfaces.ITimer;
 import dbadapter.DBFacade;
 
-public class CA_Application implements CmCmds {
+public class CA_Application implements CmCmds, ITimer {
 	
 	private static CA_Application instance;
 	
@@ -31,10 +31,10 @@ public class CA_Application implements CmCmds {
 	}
 
 	@Override
-	public GroupCalendar getCalendarInfos(int cid, String name, LocationData location, String description, AppointmentData appointments) {
+	public GroupCalendar getCalendarInfos(int cid) {
 		
 		DBFacade dbFacade = DBFacade.getInstance();
-		GroupCalendar gc = dbFacade.fetchCalendarInfos(cid, name, location, description, appointments);
+		GroupCalendar gc = dbFacade.fetchCalendarInfos(cid);
 		return gc;
 	}
 

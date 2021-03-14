@@ -12,7 +12,7 @@
 		<option value="4">User4</option>
 		<option value="5">User5</option>
 	</select>
-	<button type="submit" id="" name="" value="Submit">Show Calendar</button>
+	<button type="submit" id="btn_showCalendar" name="" value="Submit">Show Calendar</button>
 </form>
 
 <h4>Create a new Appointment for your Group<br></h4>
@@ -88,7 +88,7 @@
 		<option value="4">User4</option>
 		<option value="5">User5</option>
 	</select>
-	<button type="submit" id="" name="selectAWebPage" value="Submit">Pending Requests</button>
+	<button type="submit" id="btn_pendingRequests" name="selectAWebPage" value="Submit">Pending Requests</button>
 </form>
 
 <#include "footer.ftl">

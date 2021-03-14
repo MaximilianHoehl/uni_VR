@@ -39,14 +39,14 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 	}
 
 
-	public GroupCalendar fetchCalendarInfos(int cid, String name, LocationData location, String description,AppointmentData appointments) {
+	public GroupCalendar fetchCalendarInfos(int cid) {
 		
 		//GroupCalendar-Variable deklarieren (bekommt den Rückgabewert)
 		GroupCalendar result = null;
 		ArrayList<AppointmentData> appointmentList = new ArrayList<AppointmentData>();
 		
 		// Declare the necessary SQL queries.
-		String sqlSelect = "SELECT * FROM groupcalendars gc WHERE gc.cid=?";
+		String sqlSelect = "SELECT * FROM groupcalendars gc WHERE gc.cid=?";	//queryGC
 
 		// Query all offers that fits to the given criteria.
 		try (Connection connection = createDBConnection()) {
@@ -60,7 +60,7 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 			
 					while (rs.next()) {
 						
-						String sqlSelectAppointments = "SELECT * FROM appointments WHERE cid=?";
+						String sqlSelectAppointments = "SELECT * FROM appointments WHERE cid=?";		//queryAPP
 						try(PreparedStatement psSA = connection.prepareStatement(sqlSelectAppointments)){
 							System.out.println("DBFacade: FetchCalendarAppointments: prepared Appointment SELECT statement");
 							psSA.setInt(1, cid);
@@ -119,7 +119,7 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 			TimeData deadline, TimeData startTime, TimeData endTime, String[] pp) {
 		
 		//check if requested Appointment overlaps
-		String sqlSelectOverlap = "SELECT COUNT(*) FROM appointments a"
+		String sqlSelectOverlap = "SELECT COUNT(*) FROM appointments a"		//queryA
 				+ " WHERE ((a.startTime >= ? ) AND (a.startTime <= ? ))"
 				+ " OR ((a.endTime >= ? ) AND (a.endTime <= ? ))"
 				+ " OR ((a.startTime < ? ) AND (a.endTime > ? ))";
@@ -142,10 +142,10 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 							System.out.println("No overlap");
 							System.out.println(rs.getInt("count(*)")==0);
 							
-							String sqlInsertA = "INSERT INTO appointments"
+							String sqlInsertA = "INSERT INTO appointments"														//insertA
 									+ " (cid, name, description, location, startTime, endTime, deadline, finalized)"
 									+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-							String sqlInsertSugg = "INSERT INTO suggestions(uid, aid, startTime, endTime) VALUES (?, ?, ?, ?)";
+							String sqlInsertSugg = "INSERT INTO suggestions(uid, aid, startTime, endTime) VALUES (?, ?, ?, ?)";	//insertSugg
 							try(PreparedStatement psI = connection.prepareStatement(sqlInsertA)){
 								psI.setInt(1, cid);
 								psI.setString(2, name);
@@ -408,7 +408,7 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 	public ArrayList<Appointment> fetchUnfinalizedAppointments(int cid) {
 		ArrayList<Appointment> result = new ArrayList<Appointment>();
 		try (Connection connection = createDBConnection()) {
-			String sql = "SELECT * FROM appointments WHERE cid=? AND finalized=false";
+			String sql = "SELECT * FROM appointments WHERE cid=? AND finalized=false"; //queryUA
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setInt(1, cid);
 			ResultSet rs = ps.executeQuery();
@@ -431,14 +431,14 @@ public class DBFacade implements IGroupCalendar, IAppointment {
 	}
 	
 	public void finalizeAppointment() {
-		String sqlGetCurrentState = "SELECT id, finalized FROM appointments";
-		String sqlFinalizeConfirmed = "Update appointments a SET finalized ="
+		String sqlGetCurrentState = "SELECT id, finalized FROM appointments"; 	//queryAppo
+		String sqlFinalizeConfirmed = "Update appointments a SET finalized ="	//updateAC
 				+ " CASE WHEN a.id=?"
 				+ " AND ((SELECT MAX(confNum)"
 				+ " FROM (SELECT c.sid, COUNT(*) as confNum FROM confirmations c WHERE c.aid=? GROUP BY c.sid) as confnums)"
 				+ " >= (SELECT COUNT(*) FROM plannedparticipants p WHERE p.aid=?))"
 				+ " THEN true ELSE a.finalized END";
-		String sqlFinalizePast = "UPDATE appointments SET finalized = true "
+		String sqlFinalizePast = "UPDATE appointments SET finalized = true "	//updateAP
 				+ "WHERE (finalized = false AND (TIMESTAMP(deadline) < CURRENT_TIMESTAMP))";
 		ArrayList<Integer> snapShotIDs = new ArrayList<Integer>();
 		ArrayList<Boolean> snapShotFinalizeStatus = new ArrayList<Boolean>();

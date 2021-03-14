@@ -7,7 +7,7 @@
 </#if>
 <br/>
 <form action="/VR/index" method="GET">
-	<button type="submit" id="" name="" value="Submit">Continue</button>
+	<button type="submit" id="btn_continue" name="" value="Submit">Continue</button>
 </form>
 
 <#include "footer.ftl">

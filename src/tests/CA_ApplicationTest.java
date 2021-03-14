@@ -26,21 +26,21 @@ class CA_ApplicationTestCase extends TestCase{
 		DBFacade stub = mock(DBFacade.class);
 		DBFacade.setInstance(stub);
 		
-		CA_Application.createInstance().getCalendarInfos(null, null, null, null, null);
+		CA_Application.createInstance().getCalendarInfos(0);
 		
-		verify(stub, times(1)).fetchCalendarInfos(null, null, null, null, null);
+		verify(stub, times(1)).fetchCalendarInfos(0);
 	}
 	@Test
 	void test_MakeAppointmentRequest() {
 		DBFacade stub = mock(DBFacade.class);
 		DBFacade.setInstance(stub);
 		
-		CA_Application.createInstance().makeAppointmentRequest(null, null, null, null, null, null, null, null);
+		CA_Application.createInstance().makeAppointmentRequest(0, null, null, null, null, null, null, null);
 		
-		verify(stub, times(1)).addAppointment(null, null, null, null, null, null, null, null);
+		verify(stub, times(1)).addAppointment(0, null, null, null, null, null, null, null);
 	}
 	@Test
-	void test_selectingDate(0, 0, 0) {
+	void test_selectingDate() {
 		DBFacade stub = mock(DBFacade.class);
 		DBFacade.setInstance(stub);
 		
@@ -49,7 +49,7 @@ class CA_ApplicationTestCase extends TestCase{
 		verify(stub, times(1)).setChosenDate(0, 0, 0);
 	}
 	@Test
-	void test_suggestingDate(null, null, null, null) {
+	void test_suggestingDate() {
 		DBFacade stub = mock(DBFacade.class);
 		DBFacade.setInstance(stub);
 		
@@ -57,7 +57,7 @@ class CA_ApplicationTestCase extends TestCase{
 		verify(stub, times(1)).saveSuggestion(0, 0, null, null);
 	}
 	@Test
-	void test_getSuggestions(0) {
+	void test_getSuggestions() {
 		DBFacade stub = mock(DBFacade.class);
 		DBFacade.setInstance(stub);
 		
@@ -65,7 +65,7 @@ class CA_ApplicationTestCase extends TestCase{
 		verify(stub, times(1)).fetchSuggestions(0);
 	}
 	@Test
-	void test_getUnfinalizedAppointments(0) {
+	void test_getUnfinalizedAppointments() {
 		DBFacade stub = mock(DBFacade.class);
 		DBFacade.setInstance(stub);
 		

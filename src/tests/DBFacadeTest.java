@@ -154,7 +154,7 @@ class DBFacadeTest extends TestCase {
 		
 		System.out.println("START TEST: FetchCalendarInfos");
 		DBFacade fixture = DBFacade.getInstance();
-		GroupCalendar result = fixture.fetchCalendarInfos(1, null, null, null, null);
+		GroupCalendar result = fixture.fetchCalendarInfos(1);
 		
 		//Check if anything returned
 		assertTrue(result != null);

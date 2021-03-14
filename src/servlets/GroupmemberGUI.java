@@ -38,7 +38,7 @@ public class GroupmemberGUI extends HttpServlet{
 			
 			case "showCalendar":
 				
-				GroupCalendar res = app.getCalendarInfos(1, null, null, null, null);
+				GroupCalendar res = app.getCalendarInfos(1);
 				request.setAttribute("pagetitle", "My Calendar");
 				request.setAttribute("navtype", "showCalendar");
 				request.setAttribute("GroupCalendarInfo", res);

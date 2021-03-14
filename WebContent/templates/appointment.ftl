@@ -2,7 +2,7 @@
 
 <h2>Appointment Suggestions</h2>
 
-<form method="POST" action="appointment?action=selectSuggestion">
+<form id="form_table_suggestions" method="POST" action="appointment?action=selectSuggestion">
 <table id="suggestions">
 	<tr>
 		<th>#</th>
@@ -12,7 +12,7 @@
 	</tr>
 	<#list suggestions as s>
 	<tr>
-		<td><input style="font-size: 20px; background-repeat: no-repeat; overflow: hidden;" value="${s.id}" name="selectedSuggestion" type="submit"></input></td>
+		<td><input id="btn_selectSuggestion" style="font-size: 20px; background-repeat: no-repeat; overflow: hidden;" value="${s.id}" name="selectedSuggestion" type="submit"></input></td>
 		<td>${s.startTime}</td>
 		<td>${s.endTime}</td>
 		<td>${s.confirmations} / ${s.requiredConfirmations}</td>

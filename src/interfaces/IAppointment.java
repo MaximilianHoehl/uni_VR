@@ -26,4 +26,5 @@ public interface IAppointment {
 	
 	public int get_confirmations();
 	
+	public void finalizeAppointment();
 }

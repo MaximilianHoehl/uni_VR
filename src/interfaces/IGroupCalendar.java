@@ -6,6 +6,6 @@ import datatypes.AppointmentData;
 
 public interface IGroupCalendar {
 	
-	public GroupCalendar fetchCalendarInfos(int cid, String name, LocationData location, String description, AppointmentData Appointment);
+	public GroupCalendar fetchCalendarInfos(int cid);
 
 }

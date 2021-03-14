@@ -19,14 +19,21 @@ class AppointmentTest {
 	@Before
 	public void prepare() {
 		tester = new WebTester();
-		tester.setBaseUrl("http://localhost:8080/VR/appointment");
+		tester.setBaseUrl("http://localhost:8080/VR"); ///appointment?clickedAppointmentID=0
 	}
 
 	@Test
 	public void testAppointment() {
-
+		tester.gotoPage("http://localhost:8080/VR/appointment?clickedAppointmentID=0");
+		//tester.beginAt("");
 		// Check all components of the search form
 		tester.assertTitleEquals("CalendarApplication - Welcome");
+		
+		tester.assertTextPresent("Appointment Suggestions");
+		tester.assertTablePresent("suggestions");
+		String[][] tableHeadings = { { "#", "StartTime", "EndTime", "Confirmations" } };
+		tester.assertTableEquals("suggestions", tableHeadings);
+		
 		tester.assertTextPresent("Suggest another date");
 		
 		tester.assertTextPresent("From(date):");
@@ -51,9 +58,9 @@ class AppointmentTest {
 		tester.clickButton("New Suggestion");
 
 		// Check the representation of the table for an empty result
-		tester.assertTablePresent("createSuggestions");
-		String[][] tableHeadings = { { "#", "StartTime", "EndTime", "Confirmation" } };
-		tester.assertTableEquals("createSuggestions", tableHeadings);
+		//tester.assertTablePresent("createSuggestions");
+		//String[][] tableHeadings = { { "#", "StartTime", "EndTime", "Confirmation" } };
+		//tester.assertTableEquals("createSuggestions", tableHeadings);
 	
 	}
 

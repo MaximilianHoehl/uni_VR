@@ -4,7 +4,7 @@
 
 <h4>Unfinalized Appointments</h4>
 
-<form action="/VR/appointment" method="GET">
+<form id="form_table_UA" action="/VR/appointment" method="GET">
 <table id="UnfinalizedAppointments">
 	<tr>
 		<th>#</th>
@@ -17,7 +17,7 @@
 	</tr>
 	<#list appointmentList as ap>
 	<tr>
-		<td><input style="font-size: 20px; background-repeat: no-repeat; overflow: hidden;" value="${ap.id}" name="clickedAppointmentID" type="submit"></input></td>
+		<td><input id="btn_UA" style="font-size: 20px; background-repeat: no-repeat; overflow: hidden;" value="${ap.id}" name="clickedAppointmentID" type="submit"></input></td>
 		<td>${ap.name}</td>
 		<td>${ap.description}</td>
 		<td>${ap.location.street}, ${ap.location.postcode}, ${ap.location.town}, ${ap.location.country}</td>
